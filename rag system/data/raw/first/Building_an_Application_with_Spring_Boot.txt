@@ -1,1 +1,773 @@
-getting started building application spring boot skip main content spring overview trending generative ai cloud architecture pattern microservices reactive event driven application type web application serverless batch learn getting started quickstart guide academy course get certified project overview project spring boot spring framework spring cloud spring ai spring data spring integration spring batch spring security foundational project micrometer reactor development tool spring tool spring initializr resource blog release calendar version mapping release highlight security advisory github orgs spring project spring cloud community overview event author enterprise overview long term support automated upgrade governance compliance modern app development guide building application spring boot guide provides sampling spring boot help accelerate application development read spring getting started guide see use case spring boot guide meant give quick taste spring boot want create spring boot based project visit spring initializr fill project detail pick option download bundled project zip file build build simple web application spring boot add useful service need 15 minute favorite text editor ide java 17 later gradle 7 5 maven 3 5 also import code straight ide spring tool suite sts intellij idea vscode complete guide like spring getting started guide start scratch complete step bypass basic setup step already familiar either way end working code start scratch move starting spring initializr skip basic following download unzip source repository guide clone using git git clone cd g spring boot initial jump ahead create simple web application finish check result code g spring boot complete learn spring boot spring boot offer fast way build application look spring boot module added bean configured make reasonable assumption missing add item spring boot focus business feature less infrastructure following example show spring boot spring boot starter webmvc classpath several specific bean almost always need spring boot add automatically spring mvc application also need servlet container spring boot automatically configures embedded tomcat jetty classpath tomcat spring boot handle configures jetty instead spring boot starter thymeleaf classpath bean must always added application context spring boot add example automatic configuration spring boot provides time spring boot get way example thymeleaf classpath spring boot automatically add springtemplateengine application context define springtemplateengine setting spring boot add one leaf control little effort part spring boot generate code make edits file instead start application spring boot dynamically wire bean setting applies application context starting spring initializr use pre initialized project click generate download zip file project configured fit example tutorial manually initialize project navigate service pull dependency need application setup choose either gradle maven language want use click dependency select spring web click generate download resulting zip file archive web application configured choice ide spring initializr integration complete process ide also fork project github open ide editor create simple web application create web controller simple web application following listing show java package com example springboot import org springframework web bind annotation getmapping import org springframework web bind annotation restcontroller restcontroller public class hellocontroller getmapping public string index return greeting spring boot kotlin package com example springboot import org springframework web bind annotation getmapping import org springframework web bind annotation restcontroller restcontroller class hellocontroller getmapping fun index string greeting spring boot class flagged restcontroller meaning ready use spring mvc handle web request getmapping map index method invoked browser using curl command line method return pure text restcontroller combine controller responsebody two annotation result web request returning data rather view create application class spring initializr creates simple application class however case simple need modify application class match following listing java package com example springboot import java util array import org springframework boot commandlinerunner import org springframework boot springapplication import org springframework boot autoconfigure springbootapplication import org springframework context applicationcontext import org springframework context annotation bean springbootapplication public class application public static void main string args springapplication run application class args bean public commandlinerunner commandlinerunner applicationcontext ctx return args system println let inspect bean provided spring boot string beannames ctx getbeandefinitionnames array sort beannames string beanname beannames system println beanname kotlin package com example springboot import org springframework boot commandlinerunner import org springframework boot autoconfigure springbootapplication import org springframework boot runapplication import org springframework context applicationcontext import org springframework context annotation bean springbootapplication class application bean fun commandlinerunner ctx applicationcontext commandlinerunner println let inspect bean provided spring boot val beannames ctx beandefinitionnames beannames sorted foreach println fun main args array string runapplication application args springbootapplication convenience annotation add following configuration tag class source bean definition application context enableautoconfiguration tell spring boot start adding bean based classpath setting bean various property setting example spring webmvc classpath annotation flag application web application activates key behavior setting dispatcherservlet componentscan tell spring look component configuration service com example package letting find controller main method us spring boot springapplication run method launch application notice single line xml web xml file either web application 100 pure java deal configuring plumbing infrastructure also commandlinerunner method marked bean run startup retrieves bean created application automatically added spring boot sort print run application run application run following command terminal window directory gradlew bootrun use maven run following command terminal window directory mvnw spring boot run see output similar following let inspect bean provided spring boot application applicationavailability applicationtaskexecutor applicationtaskexecutorasyncconfigurer availabilityprobeshealthendpointgroupspostprocessor basicerrorcontroller beannamehandlermapping beannameviewresolver see org springframework boot tech autoconfigure bean also tomcatservletwebserverfactory one run service curl separate terminal window running following command shown output curl greeting spring boot add unit test want add test endpoint added spring boot provides test starter technology support use gradle add following dependency build gradle kt file groovy testimplementation org springframework boot spring boot starter webmvc test kotlin testimplementation org springframework boot spring boot starter webmvc test use maven add following pom xml file dependency groupid org springframework boot groupid artifactid spring boot starter webmvc test artifactid scope test scope dependency write simple unit test mock servlet request response endpoint following listing show java package com example springboot import static org hamcrest matcher equalto import static org springframework test web servlet request mockmvcrequestbuilders get import static org springframework test web servlet result mockmvcresultmatchers content import static org springframework test web servlet result mockmvcresultmatchers status import org junit jupiter api test import org springframework bean factory annotation autowired import org springframework boot test context springboottest import org springframework boot webmvc test autoconfigure autoconfiguremockmvc import org springframework import org springframework test web servlet mockmvc springboottest autoconfiguremockmvc public class hellocontrollertest autowired private mockmvc mvc test public void gethello throw exception mvc perform get accept mediatype application json andexpect status isok andexpect content string equalto greeting spring boot kotlin package com example springboot import org junit jupiter api test import org springframework bean factory annotation autowired import org springframework boot test context springboottest import org springframework boot webmvc test autoconfigure autoconfiguremockmvc import org springframework import org springframework test web servlet mockmvc import org springframework test web servlet get springboottest autoconfiguremockmvc class hellocontrollertest autowired private val mvc mockmvc test fun gethello mvc get accept mediatype application json andexpect status isok content string greeting spring boot mockmvc come spring test let set convenient builder class send http request dispatcherservlet make assertion result note use autoconfiguremockmvc springboottest inject mockmvc instance used springboottest asking whole application context created alternative would ask spring boot create web layer context using webmvctest either case spring boot automatically try locate main application class application override narrow want build something different well mocking http request cycle also use spring boot write simple full stack integration test example instead well mock test shown earlier could create following test java package com example springboot import org junit jupiter api test import org springframework bean factory annotation autowired import org springframework boot resttestclient autoconfigure autoconfigureresttestclient import org springframework boot test context springboottest import org springframework test web servlet client resttestclient springboottest webenvironment springboottest webenvironment random port autoconfigureresttestclient public class hellocontrollerintegrationtest autowired private resttestclient client test public void gethello client get uri exchangesuccessfully expectbody string class isequalto greeting spring boot kotlin package com example springboot import org junit jupiter api test import org springframework bean factory annotation autowired import org springframework boot resttestclient autoconfigure autoconfigureresttestclient import org springframework boot test context springboottest import org springframework test web servlet client resttestclient import org springframework test web servlet client expectbody springboottest webenvironment springboottest webenvironment random port autoconfigureresttestclient class hellocontrollerintegrationtest autowired private val client resttestclient test fun gethello client get uri exchangesuccessfully expectbody string isequalto greeting spring boot embedded server start random port webenvironment springboottest webenvironment random port actual port configured automatically base url resttestclient add production grade service building website business probably need add management service spring boot provides several service health audit bean actuator module use gradle add following dependency build gradle kt file groovy implementation org springframework boot spring boot starter actuator kotlin implementation org springframework boot spring boot starter actuator use maven add following dependency pom xml file dependency groupid org springframework boot groupid artifactid spring boot starter actuator artifactid dependency restart application use gradle run following command terminal window gradlew bootrun use maven run following command terminal window mvnw spring boot run see new set restful end point added application management service provided spring boot following listing show typical output management endpoint health org springframework boot health autoconfigure actuate endpoint healthendpointproperties management endpoint web org springframework boot actuate autoconfigure endpoint web webendpointproperties management endpoint web cors org springframework boot actuate autoconfigure endpoint web corsendpointproperties management health diskspace org springframework boot health autoconfigure application diskspacehealthindicatorproperties management health ssl org springframework boot health autoconfigure application sslhealthindicatorproperties management info org springframework boot actuate autoconfigure info infocontributorproperties management metric org springframework boot micrometer metric autoconfigure metricsproperties management observation org springframework boot micrometer observation autoconfigure observationproperties management simple metric export org springframework boot micrometer metric autoconfigure export simple simpleproperties actuator expose following actuator health actuator also actuator shutdown endpoint default disabled expose add management endpoint shutdown access unrestricted application property file expose management endpoint web exposure include health info shutdown however probably enable shutdown endpoint publicly available application check health application running following command curl status try also invoke shutdown curl see happens added necessary line shown preceding note application property curl x post timestamp 2026 02 06t08 13 01 514z status 404 error found path actuator shutdown enable requested endpoint available endpoint exist detail rest endpoint tune setting application property file src main resource see documentation endpoint view spring boot starter seen spring boot starter see source code jar support last example showed spring boot let wire bean may aware need also showed turn convenient management service however spring boot support traditional war file deployment also let put together executable jar thanks spring boot loader module various guide demonstrate dual support spring boot gradle plugin spring boot maven plugin summary congratulation built simple web application spring boot learned ramp development pace also turned handy production service small sampling spring boot see spring boot reference guide much information see also following guide may also helpful securing web application serving web content spring mvc want write new guide contribute existing one check contribution guideline guide released aslv2 license code attribution noderivatives creative common license writing get code go repo free work cloud complete guide cloud spring academy go spring academy spring generative ai microservices reactive event driven cloud web application serverless batch learn quickstart guide course get certified project resource blog release calendar version mapping release highlight security advisory community event author enterprise long term support automated upgrade governance compliance modern app development thank get spring newsletter stay connected spring newsletter subscribe copyright 2005 2026 broadcom right reserved term broadcom refers broadcom inc subsidiary term use privacy trademark guideline apache apache tomcat apache kafka apache cassandra apache geode trademark registered trademark apache software foundation united state country java java se java ee openjdk trademark oracle affiliate kubernetes registered trademark linux foundation united state country linux registered trademark linus torvalds united state country window microsoft azure registered trademark microsoft corporation aws amazon web service trademark registered trademark amazon com inc affiliate trademark copyright property respective owner mentioned informative purpose name may trademark respective owner
+
+Source Link: https://spring.io/guides/gs/spring-boot/
+title: Building an Application with Spring Boot
+
+What You Will build
+
+
+You will build a simple web application with Spring Boot and add some useful services to it.
+
+
+***
+Source Link: https://spring.io/guides/gs/spring-boot/
+title: Building an Application with Spring Boot
+
+What You Need
+
+
+
+
+About 15 minutes
+
+A favorite text editor or IDE
+
+Java 17 or later
+
+Gradle 7.5+ or Maven 3.5+
+
+You can also import the code straight into your IDE:
+
+
+
+Spring Tool Suite (STS)
+
+IntelliJ IDEA
+
+VSCode
+
+
+
+
+
+***
+Source Link: https://spring.io/guides/gs/spring-boot/
+title: Building an Application with Spring Boot
+
+How to complete this guide
+
+
+Like most Spring Getting Started guides, you can start from scratch and complete each step or you can bypass basic setup steps that are already familiar to you. Either way, you end up with working code.
+
+
+To start from scratch, move on to Starting with Spring Initializr.
+
+
+To skip the basics, do the following:
+
+
+
+
+Download and unzip the source repository for this guide, or clone it using Git: git clone https://github.com/spring-guides/gs-spring-boot.git
+
+cd into gs-spring-boot/initial
+
+Jump ahead to Create a Simple Web Application.
+
+
+
+When you finish, you can check your results against the code in gs-spring-boot/complete.
+
+
+***
+Source Link: https://spring.io/guides/gs/spring-boot/
+title: Building an Application with Spring Boot
+
+Learn What You Can Do with Spring Boot
+
+
+Spring Boot offers a fast way to build applications. It looks at the Spring Boot modules you’ve added and at the beans you have configured, makes reasonable assumptions about what you are missing, and adds those items. With Spring Boot, you can focus more on business features and less on infrastructure.
+
+
+The following examples show what Spring Boot can do for you:
+
+
+
+
+Is spring-boot-starter-webmvc on the classpath? There are several specific beans you almost always need, and Spring Boot adds them automatically. A Spring MVC application also needs a servlet container, so Spring Boot automatically configures embedded Tomcat.
+
+Is Jetty on the classpath, but Tomcat isn’t? If so Spring Boot handles that for you and configures Jetty instead.
+
+Is spring-boot-starter-thymeleaf on the classpath? If so, there are a few beans that must always be added to your application context. Spring Boot adds them for you.
+
+
+
+These are just a few examples of the automatic configuration Spring Boot provides. At the same time, Spring Boot does not get in your way. For example, if Thymeleaf is on your classpath, Spring Boot automatically adds a SpringTemplateEngine to your application context. But if you define your own SpringTemplateEngine with your own settings, Spring Boot does not add one. This leaves you in control with little effort on your part.
+
+
+
+
+
+
+Spring Boot does not generate code or make edits to your files. Instead, when you start your application, Spring Boot dynamically wires up beans and settings and applies them to your application context.
+
+
+
+
+
+***
+Source Link: https://spring.io/guides/gs/spring-boot/
+title: Building an Application with Spring Boot
+
+Starting with Spring Initializr
+
+
+You can use this pre-initialized project and click Generate to download a ZIP file. This project is configured to fit the examples in this tutorial.
+
+
+To manually initialize the project:
+
+
+
+
+Navigate to https://start.spring.io. This service pulls in all the dependencies you need for an application and does most of the setup for you.
+
+Choose either Gradle or Maven and the language you want to use.
+
+Click Dependencies and select Spring Web.
+
+Click Generate.
+
+Download the resulting ZIP file, which is an archive of a web application that is configured with your choices.
+
+
+
+
+
+
+
+If your IDE has the Spring Initializr integration, you can complete this process from your IDE.
+
+
+
+
+
+
+
+
+
+You can also fork the project from GitHub and open it in your IDE or other editor.
+
+
+
+
+
+***
+Source Link: https://spring.io/guides/gs/spring-boot/
+title: Building an Application with Spring Boot
+
+Create a Simple Web Application
+
+
+Now you can create a web controller for a simple web application, as the following listing shows:
+
+
+
+
+
+      Java
+     
+
+package com.example.springboot;
+
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+public class HelloController {
+
+  @GetMapping("/")
+  public String index() {
+    return "Greetings from Spring Boot!";
+  }
+
+}
+
+
+
+
+      Kotlin
+     
+
+package com.example.springboot
+
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.RestController
+
+@RestController
+class HelloController {
+  @GetMapping("/")
+  fun index(): String = "Greetings from Spring Boot!"
+}
+
+
+
+
+
+The class is flagged as a @RestController, meaning it is ready for use by Spring MVC to handle web requests. @GetMapping maps / to the index() method. When invoked from a browser or by using curl on the command line, the method returns pure text. That is because @RestController combines @Controller and @ResponseBody, two annotations that results in web requests returning data rather than a view.
+
+
+***
+Source Link: https://spring.io/guides/gs/spring-boot/
+title: Building an Application with Spring Boot
+
+Create an Application class
+
+
+The Spring Initializr creates a simple application class for you. However, in this case, it is too simple. You need to modify the application class to match the following listing:
+
+
+
+
+
+      Java
+     
+
+package com.example.springboot;
+
+import java.util.Arrays;
+
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Bean;
+
+@SpringBootApplication
+public class Application {
+
+  public static void main(String[] args) {
+    SpringApplication.run(Application.class, args);
+  }
+
+  @Bean
+  public CommandLineRunner commandLineRunner(ApplicationContext ctx) {
+    return args -> {
+
+      System.out.println("Let's inspect the beans provided by Spring Boot:");
+
+      String[] beanNames = ctx.getBeanDefinitionNames();
+      Arrays.sort(beanNames);
+      for (String beanName : beanNames) {
+        System.out.println(beanName);
+      }
+
+    };
+  }
+
+}
+
+
+
+
+      Kotlin
+     
+
+package com.example.springboot
+
+import org.springframework.boot.CommandLineRunner
+import org.springframework.boot.autoconfigure.SpringBootApplication
+import org.springframework.boot.runApplication
+import org.springframework.context.ApplicationContext
+import org.springframework.context.annotation.Bean
+
+@SpringBootApplication
+class Application {
+
+  @Bean
+  fun commandLineRunner(ctx: ApplicationContext) = CommandLineRunner {
+    println("Let's inspect the beans provided by Spring Boot:")
+    val beanNames = ctx.beanDefinitionNames
+    beanNames.sorted().forEach { println(it) }
+  }
+}
+
+fun main(args: Array<String>) {
+  runApplication<Application>(*args)
+}
+
+
+
+
+
+@SpringBootApplication is a convenience annotation that adds all of the following:
+
+
+
+
+@Configuration: Tags the class as a source of bean definitions for the application context.
+
+@EnableAutoConfiguration: Tells Spring Boot to start adding beans based on classpath settings, other beans, and various property settings. For example, if spring-webmvc is on the classpath, this annotation flags the application as a web application and activates key behaviors, such as setting up a DispatcherServlet.
+
+@ComponentScan: Tells Spring to look for other components, configurations, and services in the com/example package, letting it find the controllers.
+
+
+
+The main() method uses Spring Boot’s SpringApplication.run() method to launch an application. Did you notice that there was not a single line of XML? There is no web.xml file, either. This web application is 100% pure Java and you did not have to deal with configuring any plumbing or infrastructure.
+
+
+There is also a CommandLineRunner method marked as a @Bean, and this runs on startup. It retrieves all the beans that were created by your application or that were automatically added by Spring Boot. It sorts them and prints them out.
+
+
+***
+Source Link: https://spring.io/guides/gs/spring-boot/
+title: Building an Application with Spring Boot
+
+Run the Application
+
+
+To run the application, run the following command in a terminal window directory:
+
+
+
+
+
+./gradlew bootRun
+
+
+
+
+
+If you use Maven, run the following command in a terminal window directory:
+
+
+
+
+
+./mvnw spring-boot:run
+
+
+
+
+
+You should see output similar to the following:
+
+
+
+
+
+Let's inspect the beans provided by Spring Boot:
+application
+applicationAvailability
+applicationTaskExecutor
+applicationTaskExecutorAsyncConfigurer
+availabilityProbesHealthEndpointGroupsPostProcessor
+basicErrorController
+beanNameHandlerMapping
+beanNameViewResolver
+...
+
+
+
+
+
+You can see org.springframework.boot.<tech>.autoconfigure beans. There is also a tomcatServletWebServerFactory one.
+
+
+Now run the service with curl (in a separate terminal window) by running the following command (shown with its output):
+
+
+
+
+
+$ curl http://localhost:8080
+Greetings from Spring Boot!
+
+
+
+
+
+***
+Source Link: https://spring.io/guides/gs/spring-boot/
+title: Building an Application with Spring Boot
+
+Add Unit Tests
+
+
+You will want to add a test for the endpoint you added. Spring Boot provides a test starter for all technologies that it supports.
+
+
+If you use Gradle, add the following dependency to your build.gradle(.kts) file:
+
+
+
+
+
+      Groovy
+     
+
+testImplementation 'org.springframework.boot:spring-boot-starter-webmvc-test'
+
+
+
+
+      Kotlin
+     
+
+testImplementation("org.springframework.boot:spring-boot-starter-webmvc-test")
+
+
+
+
+
+If you use Maven, add the following to your pom.xml file:
+
+
+
+<dependency>
+  <groupId>org.springframework.boot</groupId>
+  <artifactId>spring-boot-starter-webmvc-test</artifactId>
+  <scope>test</scope>
+</dependency>
+
+
+
+Now write a simple unit test that mocks the servlet request and response through your endpoint, as the following listing shows:
+
+
+
+
+
+      Java
+     
+
+package com.example.springboot;
+
+import static org.hamcrest.Matchers.equalTo;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import org.junit.jupiter.api.Test;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MockMvc;
+
+@SpringBootTest
+@AutoConfigureMockMvc
+public class HelloControllerTest {
+
+  @Autowired
+  private MockMvc mvc;
+
+  @Test
+  public void getHello() throws Exception {
+    mvc.perform(get("/").accept(MediaType.APPLICATION_JSON))
+        .andExpect(status().isOk())
+        .andExpect(content().string(equalTo("Greetings from Spring Boot!")));
+  }
+}
+
+
+
+
+      Kotlin
+     
+
+package com.example.springboot
+
+import org.junit.jupiter.api.Test
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc
+import org.springframework.http.MediaType
+import org.springframework.test.web.servlet.MockMvc
+import org.springframework.test.web.servlet.get
+
+@SpringBootTest
+@AutoConfigureMockMvc
+class HelloControllerTest(@Autowired private val mvc: MockMvc) {
+
+  @Test
+  fun getHello() {
+    mvc.get("/") {
+      accept(MediaType.APPLICATION_JSON)
+    }.andExpect {
+      status { isOk() }
+      content { string("Greetings from Spring Boot!") }
+    }
+  }
+}
+
+
+
+
+
+MockMvc comes from Spring Test and lets you, through a set of convenient builder classes, send HTTP requests into the DispatcherServlet and make assertions about the result. Note the use of @AutoConfigureMockMvc and @SpringBootTest to inject a MockMvc instance. Having used @SpringBootTest, we are asking for the whole application context to be created. An alternative would be to ask Spring Boot to create only the web layers of the context by using @WebMvcTest. In either case, Spring Boot automatically tries to locate the main application class of your application, but you can override it or narrow it down if you want to build something different.
+
+
+As well as mocking the HTTP request cycle, you can also use Spring Boot to write a simple full-stack integration test. For example, instead of (or as well as) the mock test shown earlier, we could create the following test:
+
+
+
+
+
+      Java
+     
+
+package com.example.springboot;
+
+import org.junit.jupiter.api.Test;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.resttestclient.autoconfigure.AutoConfigureRestTestClient;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.web.servlet.client.RestTestClient;
+
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@AutoConfigureRestTestClient
+public class HelloControllerIntegrationTest {
+
+  @Autowired
+  private RestTestClient client;
+
+  @Test
+  public void getHello() {
+    client.get().uri("/").exchangeSuccessfully()
+        .expectBody(String.class)
+        .isEqualTo("Greetings from Spring Boot!");
+  }
+}
+
+
+
+
+      Kotlin
+     
+
+package com.example.springboot
+
+import org.junit.jupiter.api.Test
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.resttestclient.autoconfigure.AutoConfigureRestTestClient
+import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.test.web.servlet.client.RestTestClient
+import org.springframework.test.web.servlet.client.expectBody
+
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@AutoConfigureRestTestClient
+class HelloControllerIntegrationTest(@Autowired private val client: RestTestClient) {
+
+  @Test
+  fun getHello() {
+    client.get().uri("/")
+      .exchangeSuccessfully()
+      .expectBody<String>()
+      .isEqualTo("Greetings from Spring Boot!")
+  }
+}
+
+
+
+
+
+The embedded server starts on a random port because of webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, and the actual port is configured automatically in the base URL for the RestTestClient.
+
+
+***
+Source Link: https://spring.io/guides/gs/spring-boot/
+title: Building an Application with Spring Boot
+
+Add Production-grade Services
+
+
+If you are building a website for your business, you probably need to add some management services. Spring Boot provides several such services (such as health, audits, beans, and more) with its actuator module.
+
+
+If you use Gradle, add the following dependency to your build.gradle(.kts) file:
+
+
+
+
+
+      Groovy
+     
+
+implementation 'org.springframework.boot:spring-boot-starter-actuator'
+
+
+
+
+      Kotlin
+     
+
+implementation("org.springframework.boot:spring-boot-starter-actuator")
+
+
+
+
+
+If you use Maven, add the following dependency to your pom.xml file:
+
+
+
+<dependency>
+  <groupId>org.springframework.boot</groupId>
+  <artifactId>spring-boot-starter-actuator</artifactId>
+</dependency>
+
+
+
+Then restart the application. If you use Gradle, run the following command in a terminal window:
+
+
+
+
+
+./gradlew bootRun
+
+
+
+
+
+If you use Maven, run the following command in a terminal window:
+
+
+
+
+
+./mvnw spring-boot:run
+
+
+
+
+
+You should see that a new set of RESTful end points has been added to the application. These are management services provided by Spring Boot. The following listing shows a typical output:
+
+
+
+
+
+management.endpoint.health-org.springframework.boot.health.autoconfigure.actuate.endpoint.HealthEndpointProperties
+management.endpoints.web-org.springframework.boot.actuate.autoconfigure.endpoint.web.WebEndpointProperties
+management.endpoints.web.cors-org.springframework.boot.actuate.autoconfigure.endpoint.web.CorsEndpointProperties
+management.health.diskspace-org.springframework.boot.health.autoconfigure.application.DiskSpaceHealthIndicatorProperties
+management.health.ssl-org.springframework.boot.health.autoconfigure.application.SslHealthIndicatorProperties
+management.info-org.springframework.boot.actuate.autoconfigure.info.InfoContributorProperties
+management.metrics-org.springframework.boot.micrometer.metrics.autoconfigure.MetricsProperties
+management.observations-org.springframework.boot.micrometer.observation.autoconfigure.ObservationProperties
+management.simple.metrics.export-org.springframework.boot.micrometer.metrics.autoconfigure.export.simple.SimpleProperties
+
+
+
+
+
+The actuator exposes the following:
+
+
+
+
+actuator/health
+
+actuator
+
+
+
+
+
+
+
+There is also an /actuator/shutdown endpoint, but, by default, it is disabled. To expose it, add management.endpoint.shutdown.access=unrestricted to your application.properties file and expose it with management.endpoints.web.exposure.include=health,info,shutdown. However, you probably should not enable the shutdown endpoint for a publicly available application.
+
+
+
+
+
+You can check the health of the application by running the following command:
+
+
+
+
+
+$ curl http://localhost:8080/actuator/health
+{"status":"UP"}
+
+
+
+
+
+You can try also to invoke shutdown through curl, to see what happens when you have not added the necessary line (shown in the preceding note) to application.properties:
+
+
+
+
+
+$ curl -X POST http://localhost:8080/actuator/shutdown
+{"timestamp":"2026-02-06T08:13:01.514Z","status":404,"error":"Not Found","path":"/actuator/shutdown"}
+
+
+
+
+
+Because we did not enable it, the requested endpoint is not available (because the endpoint does not exist).
+
+
+For more details about each of these REST endpoints and how you can tune their settings with an application.properties file (in src/main/resources), see the documentation about the endpoints.
+
+
+***
+Source Link: https://spring.io/guides/gs/spring-boot/
+title: Building an Application with Spring Boot
+
+View Spring Boot’s Starters
+
+
+You have seen some of Spring Boot’s “starters”. You can see them all here in source code.
+
+
+***
+Source Link: https://spring.io/guides/gs/spring-boot/
+title: Building an Application with Spring Boot
+
+JAR Support
+
+
+The last example showed how Spring Boot lets you wire beans that you may not be aware you need. It also showed how to turn on convenient management services.
+
+
+However, Spring Boot does more than that. It supports not only traditional WAR file deployments but also lets you put together executable JARs, thanks to Spring Boot’s loader module. The various guides demonstrate this dual support through the spring-boot-gradle-plugin and spring-boot-maven-plugin.
+
+
+***
+Source Link: https://spring.io/guides/gs/spring-boot/
+title: Building an Application with Spring Boot
+
+Summary
+
+
+Congratulations! You built a simple web application with Spring Boot and learned how it can ramp up your development pace. You also turned on some handy production services. This is only a small sampling of what Spring Boot can do. See the Spring Boot Reference Guide for much more information.
+
+
+***
+Source Link: https://spring.io/guides/gs/spring-boot/
+title: Building an Application with Spring Boot
+
+See Also
+
+
+The following guides may also be helpful:
+
+
+
+
+Securing a Web Application
+
+Serving Web Content with Spring MVC
+
+
+
+Want to write a new guide or contribute to an existing one? Check out our contribution guidelines.
+
+
+
+
+
+
+All guides are released with an ASLv2 license for the code, and an Attribution, NoDerivatives creative commons license for the writing.
+
+
+
+
+

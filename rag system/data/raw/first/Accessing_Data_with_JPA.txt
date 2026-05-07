@@ -1,1 +1,610 @@
-getting started accessing data jpa skip main content spring overview trending generative ai cloud architecture pattern microservices reactive event driven application type web application serverless batch learn getting started quickstart guide academy course get certified project overview project spring boot spring framework spring cloud spring ai spring data spring integration spring batch spring security foundational project micrometer reactor development tool spring tool spring initializr resource blog release calendar version mapping release highlight security advisory github orgs spring project spring cloud community overview event author enterprise overview long term support automated upgrade governance compliance modern app development guide accessing data jpa guide walk process building application us spring data jpa store retrieve data relational database build build application store customer object memory based database need 15 minute favorite text editor ide java 17 later gradle 7 5 maven 3 5 also import code straight ide spring tool suite sts intellij idea vscode complete guide like spring getting started guide start scratch complete step bypass basic setup step already familiar either way end working code start scratch move starting spring initializr skip basic following download unzip source repository guide clone using git git clone cd g accessing data jpa initial jump ahead define simple entity finish check result code g accessing data jpa complete starting spring initializr use pre initialized project click generate download zip file project configured fit example tutorial manually initialize project navigate service pull dependency need application setup choose either gradle maven language want use type accessing data jpa artifact form field click dependency select spring data jpa h2 database click generate download resulting zip file archive web application configured choice ide spring initializr integration complete process ide also fork project github open ide editor define simple entity example store customer object annotated jpa entity following listing show customer class java package com example accessingdatajpa import jakarta persistence entity import jakarta persistence generatedvalue import jakarta persistence generationtype import jakarta persistence id entity public class customer id generatedvalue strategy generationtype auto private long id private string firstname private string lastname protected customer public customer string firstname string lastname firstname firstname lastname lastname override public string tostring return string format customer id firstname lastname id firstname lastname public long getid return id public string getfirstname return firstname public string getlastname return lastname kotlin package com example accessingdatajpa import jakarta persistence entity import jakarta persistence generatedvalue import jakarta persistence generationtype import jakarta persistence id entity class customer var firstname string var lastname string id generatedvalue strategy generationtype auto var id long null override fun tostring string customer id id firstname firstname lastname lastname customer class three attribute id firstname lastname also two constructor default constructor exists sake jpa use directly designated protected constructor one use create instance customer saved database customer class annotated entity indicating jpa entity table annotation exists assumed entity mapped table named customer customer object id property annotated id jpa recognizes object id id property also annotated generatedvalue indicate id generated automatically two property firstname lastname left unannotated assumed mapped column share name property convenient tostring method print customer property create simple query spring data jpa focus using jpa store data relational database compelling feature ability create repository implementation automatically runtime repository interface see work create repository interface work customer entity following listing show java package com example accessingdatajpa import java util list import org springframework data repository crudrepository public interface customerrepository extends crudrepository customer long list customer findbylastname string lastname customer findbyid long id kotlin package com example accessingdatajpa import org springframework data repository crudrepository interface customerrepository crudrepository customer long fun findbylastname lastname string list customer customerrepository extends crudrepository interface type entity id work customer long specified generic parameter crudrepository extending crudrepository customerrepository inherits several method working customer persistence including method saving deleting finding customer entity spring data jpa also let define query method declaring method signature example customerrepository includes findbylastname method typical java application might expect write class implement customerrepository however make spring data jpa powerful need write implementation repository interface spring data jpa creates implementation run application wire example see look like create application class spring initializr creates simple class application following listing show class initializr created example java package com example accessingdatajpa import org springframework boot springapplication import org springframework boot autoconfigure springbootapplication springbootapplication public class accessingdatajpaapplication public static void main string args springapplication run accessingdatajpaapplication class args kotlin package com example accessingdatajpa import org springframework boot autoconfigure springbootapplication import org springframework boot runapplication springbootapplication class accessingdatajpaapplication fun main args array string runapplication accessingdatajpaapplication args springbootapplication convenience annotation add following configuration tag class source bean definition application context enableautoconfiguration tell spring boot start adding bean based classpath setting bean various property setting example spring webmvc classpath annotation flag application web application activates key behavior setting dispatcherservlet componentscan tell spring look component configuration service com example package letting find controller main method us spring boot springapplication run method launch application notice single line xml web xml file either web application 100 pure java deal configuring plumbing infrastructure need modify simple class initializr created get output console example need set logger need set data use generate output following listing show finished accessingdatajpaapplication class java package com example accessingdatajpa import org slf4j logger import org slf4j loggerfactory import org springframework boot commandlinerunner import org springframework boot springapplication import org springframework boot autoconfigure springbootapplication import org springframework context annotation bean springbootapplication public class accessingdatajpaapplication private static final logger logger loggerfactory getlogger accessingdatajpaapplication class public static void main string args springapplication run accessingdatajpaapplication class args bean public commandlinerunner demo customerrepository repository return args save customer repository save new customer jack bauer repository save new customer chloe brian repository save new customer kim bauer repository save new customer david palmer repository save new customer michelle dessler fetch customer logger info customer found findall logger info repository findall foreach customer logger info customer tostring logger info fetch individual customer id customer customer repository findbyid 1l logger info customer found findbyid 1l logger info logger info customer tostring logger info fetch customer last name logger info customer found findbylastname bauer logger info repository findbylastname bauer foreach bauer logger info bauer tostring logger info kotlin package com example accessingdatajpa import org slf4j loggerfactory import org springframework boot commandlinerunner import org springframework boot autoconfigure springbootapplication import org springframework boot runapplication import org springframework context annotation bean private val logger loggerfactory getlogger accessingdatajpaapplication class java springbootapplication class accessingdatajpaapplication bean fun demo repository customerrepository commandlinerunner save customer repository saveall listof customer jack bauer customer chloe brian customer kim bauer customer david palmer customer michelle dessler fetch customer logger info customer found findall logger info repository findall foreach customer logger info customer tostring logger info fetch individual customer id val customer repository findbyid 1l orelsethrow logger info customer found findbyid 1l logger info logger info customer tostring logger info fetch customer last name logger info customer found findbylastname bauer logger info repository findbylastname bauer foreach bauer logger info bauer tostring logger info fun main args array string runapplication accessingdatajpaapplication args accessingdatajpaapplication class includes demo method put customerrepository test first fetch customerrepository spring application context save handful customer object demonstrating save method setting data work next call findall fetch customer object database call findbyid fetch single customer id finally call findbylastname find customer whose last name bauer demo method return commandlinerunner bean automatically run code application launch default spring boot enables jpa repository support look package subpackages springbootapplication located configuration jpa repository interface definition located package visible point alternate package using enablejparepositories type safe basepackageclasses myrepository class parameter build executable jar run application command line gradle maven also build single executable jar file contains necessary dependency class resource run building executable jar make easy ship version deploy service application throughout development lifecycle across different environment forth use gradle run application using gradlew bootrun alternatively build jar file using gradlew build run jar file follows java jar build libs g accessing data jpa 0 0 1 snapshot jar use maven run application using mvnw spring boot run alternatively build jar file mvnw clean package run jar file follows java jar target g accessing data jpa 0 0 1 snapshot jar run application see output similar following customer found findall customer id 1 firstname jack lastname bauer customer id 2 firstname chloe lastname brian customer id 3 firstname kim lastname bauer customer id 4 firstname david lastname palmer customer id 5 firstname michelle lastname dessler customer found findbyid 1l customer id 1 firstname jack lastname bauer customer found findbylastname bauer customer id 1 firstname jack lastname bauer customer id 3 firstname kim lastname bauer summary congratulation written simple application us spring data jpa save object fetch database without writing concrete repository implementation want expose jpa repository hypermedia based restful front end little effort might want read accessing jpa data rest see also following guide may also helpful accessing jpa data rest accessing data gemfire accessing data mongodb accessing data mysql accessing data neo4j want write new guide contribute existing one check contribution guideline guide released aslv2 license code attribution noderivatives creative common license writing get code go repo free work cloud complete guide cloud spring academy go spring academy project spring data jpa spring generative ai microservices reactive event driven cloud web application serverless batch learn quickstart guide course get certified project resource blog release calendar version mapping release highlight security advisory community event author enterprise long term support automated upgrade governance compliance modern app development thank get spring newsletter stay connected spring newsletter subscribe copyright 2005 2026 broadcom right reserved term broadcom refers broadcom inc subsidiary term use privacy trademark guideline apache apache tomcat apache kafka apache cassandra apache geode trademark registered trademark apache software foundation united state country java java se java ee openjdk trademark oracle affiliate kubernetes registered trademark linux foundation united state country linux registered trademark linus torvalds united state country window microsoft azure registered trademark microsoft corporation aws amazon web service trademark registered trademark amazon com inc affiliate trademark copyright property respective owner mentioned informative purpose name may trademark respective owner
+
+Source Link: https://spring.io/guides/gs/accessing-data-jpa
+title: Accessing Data with JPA
+
+What You Will Build
+
+
+You will build an application that stores Customer objects in a memory-based database.
+
+
+***
+Source Link: https://spring.io/guides/gs/accessing-data-jpa
+title: Accessing Data with JPA
+
+What You need
+
+
+
+
+About 15 minutes
+
+A favorite text editor or IDE
+
+Java 17 or later
+
+Gradle 7.5+ or Maven 3.5+
+
+You can also import the code straight into your IDE:
+
+
+
+Spring Tool Suite (STS)
+
+IntelliJ IDEA
+
+VSCode
+
+
+
+
+
+***
+Source Link: https://spring.io/guides/gs/accessing-data-jpa
+title: Accessing Data with JPA
+
+How to complete this guide
+
+
+Like most Spring Getting Started guides, you can start from scratch and complete each step or you can bypass basic setup steps that are already familiar to you. Either way, you end up with working code.
+
+
+To start from scratch, move on to Starting with Spring Initializr.
+
+
+To skip the basics, do the following:
+
+
+
+
+Download and unzip the source repository for this guide, or clone it using Git: git clone https://github.com/spring-guides/gs-accessing-data-jpa.git
+
+cd into gs-accessing-data-jpa/initial
+
+Jump ahead to Define a Simple Entity.
+
+
+
+When you finish, you can check your results against the code in gs-accessing-data-jpa/complete.
+
+
+***
+Source Link: https://spring.io/guides/gs/accessing-data-jpa
+title: Accessing Data with JPA
+
+Starting with Spring Initializr
+
+
+You can use this pre-initialized project and click Generate to download a ZIP file. This project is configured to fit the examples in this tutorial.
+
+
+To manually initialize the project:
+
+
+
+
+Navigate to https://start.spring.io. This service pulls in all the dependencies you need for an application and does most of the setup for you.
+
+Choose either Gradle or Maven and the language you want to use.
+
+Type "accessing-data-jpa" in the "Artifact" form field.
+
+Click Dependencies and select Spring Data JPA and then H2 Database.
+
+Click Generate.
+
+Download the resulting ZIP file, which is an archive of a web application that is configured with your choices.
+
+
+
+
+
+
+
+If your IDE has the Spring Initializr integration, you can complete this process from your IDE.
+
+
+
+
+
+
+
+
+
+You can also fork the project from GitHub and open it in your IDE or other editor.
+
+
+
+
+
+***
+Source Link: https://spring.io/guides/gs/accessing-data-jpa
+title: Accessing Data with JPA
+
+Define a Simple Entity
+
+
+In this example, you store Customer objects, each annotated as a JPA entity. The following listing shows the Customer class:
+
+
+
+
+
+      Java
+     
+
+package com.example.accessingdatajpa;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+
+@Entity
+public class Customer {
+
+    @Id
+    @GeneratedValue(strategy=GenerationType.AUTO)
+    private Long id;
+    private String firstName;
+    private String lastName;
+
+    protected Customer() {}
+
+    public Customer(String firstName, String lastName) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+    }
+
+    @Override
+    public String toString() {
+        return String.format(
+                "Customer[id=%d, firstName='%s', lastName='%s']",
+                id, firstName, lastName);
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+}
+
+
+
+
+      Kotlin
+     
+
+package com.example.accessingdatajpa
+
+import jakarta.persistence.Entity
+import jakarta.persistence.GeneratedValue
+import jakarta.persistence.GenerationType
+import jakarta.persistence.Id
+
+@Entity
+class Customer(
+    var firstName: String = "",
+    var lastName: String = ""
+) {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    var id: Long? = null
+
+    override fun toString(): String =
+        "Customer[id=$id, firstName='$firstName', lastName='$lastName']"
+}
+
+
+
+
+
+Here you have a Customer class with three attributes: id, firstName, and lastName. You also have two constructors. The default constructor exists only for the sake of JPA. You do not use it directly, so it is designated as protected. The other constructor is the one you use to create instances of Customer to be saved to the database.
+
+
+The Customer class is annotated with @Entity, indicating that it is a JPA entity. (Because no @Table annotation exists, it is assumed that this entity is mapped to a table named Customer.)
+
+
+The Customer object’s id property is annotated with @Id so that JPA recognizes it as the object’s ID. The id property is also annotated with @GeneratedValue to indicate that the ID should be generated automatically.
+
+
+The other two properties, firstName and lastName, are left unannotated. It is assumed that they are mapped to columns that share the same names as the properties themselves.
+
+
+The convenient toString() method prints out the customer’s properties.
+
+
+***
+Source Link: https://spring.io/guides/gs/accessing-data-jpa
+title: Accessing Data with JPA
+
+Create Simple Queries
+
+
+Spring Data JPA focuses on using JPA to store data in a relational database. Its most compelling feature is the ability to create repository implementations automatically, at runtime, from a repository interface.
+
+
+To see how this works, create a repository interface that works with Customer entities as the following listing shows:
+
+
+
+
+
+      Java
+     
+
+package com.example.accessingdatajpa;
+
+import java.util.List;
+
+import org.springframework.data.repository.CrudRepository;
+
+public interface CustomerRepository extends CrudRepository<Customer, Long> {
+
+    List<Customer> findByLastName(String lastName);
+
+    Customer findById(long id);
+}
+
+
+
+
+      Kotlin
+     
+
+package com.example.accessingdatajpa
+
+import org.springframework.data.repository.CrudRepository
+
+interface CustomerRepository : CrudRepository<Customer, Long> {
+    fun findByLastName(lastName: String): List<Customer>
+}
+
+
+
+
+
+CustomerRepository extends the CrudRepository interface. The type of entity and ID that it works with, Customer and Long, are specified in the generic parameters on CrudRepository. By extending CrudRepository, CustomerRepository inherits several methods for working with Customer persistence, including methods for saving, deleting, and finding Customer entities.
+
+
+Spring Data JPA also lets you define other query methods by declaring their method signature. For example, CustomerRepository includes the findByLastName() method.
+
+
+In a typical Java application, you might expect to write a class that implements CustomerRepository. However, that is what makes Spring Data JPA so powerful: You need not write an implementation of the repository interface. Spring Data JPA creates an implementation when you run the application.
+
+
+Now you can wire up this example and see what it looks like!
+
+
+***
+Source Link: https://spring.io/guides/gs/accessing-data-jpa
+title: Accessing Data with JPA
+
+Create an Application Class
+
+
+Spring Initializr creates a simple class for the application. The following listing shows the class that Initializr created for this example:
+
+
+
+
+
+      Java
+     
+
+package com.example.accessingdatajpa;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+public class AccessingDataJpaApplication {
+
+    public static void main(String[] args) {
+        SpringApplication.run(AccessingDataJpaApplication.class, args);
+    }
+
+}
+
+
+
+
+      Kotlin
+     
+
+package com.example.accessingdatajpa
+
+import org.springframework.boot.autoconfigure.SpringBootApplication
+import org.springframework.boot.runApplication
+
+@SpringBootApplication
+class AccessingDataJpaApplication
+
+fun main(args: Array<String>) {
+    runApplication<AccessingDataJpaApplication>(*args)
+}
+
+
+
+
+
+@SpringBootApplication is a convenience annotation that adds all of the following:
+
+
+
+
+@Configuration: Tags the class as a source of bean definitions for the application context.
+
+@EnableAutoConfiguration: Tells Spring Boot to start adding beans based on classpath settings, other beans, and various property settings. For example, if spring-webmvc is on the classpath, this annotation flags the application as a web application and activates key behaviors, such as setting up a DispatcherServlet.
+
+@ComponentScan: Tells Spring to look for other components, configurations, and services in the com/example package, letting it find the controllers.
+
+
+
+The main() method uses Spring Boot’s SpringApplication.run() method to launch an application. Did you notice that there was not a single line of XML? There is no web.xml file, either. This web application is 100% pure Java and you did not have to deal with configuring any plumbing or infrastructure.
+
+
+Now you need to modify the simple class that the Initializr created for you. To get output (to the console, in this example), you need to set up a logger. Then you need to set up some data and use it to generate output. The following listing shows the finished AccessingDataJpaApplication class:
+
+
+
+
+
+      Java
+     
+
+package com.example.accessingdatajpa;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
+
+@SpringBootApplication
+public class AccessingDataJpaApplication {
+
+    private static final Logger logger = LoggerFactory.getLogger(AccessingDataJpaApplication.class);
+
+    public static void main(String[] args) {
+        SpringApplication.run(AccessingDataJpaApplication.class, args);
+    }
+
+    @Bean
+    public CommandLineRunner demo(CustomerRepository repository) {
+        return (args) -> {
+            // save a few customers
+            repository.save(new Customer("Jack", "Bauer"));
+            repository.save(new Customer("Chloe", "O'Brian"));
+            repository.save(new Customer("Kim", "Bauer"));
+            repository.save(new Customer("David", "Palmer"));
+            repository.save(new Customer("Michelle", "Dessler"));
+
+            // fetch all customers
+            logger.info("Customers found with findAll():");
+            logger.info("-------------------------------");
+            repository.findAll().forEach(customer -> {
+                logger.info(customer.toString());
+            });
+            logger.info("");
+
+            // fetch an individual customer by ID
+            Customer customer = repository.findById(1L);
+            logger.info("Customer found with findById(1L):");
+            logger.info("--------------------------------");
+            logger.info(customer.toString());
+            logger.info("");
+
+            // fetch customers by last name
+            logger.info("Customer found with findByLastName('Bauer'):");
+            logger.info("--------------------------------------------");
+            repository.findByLastName("Bauer").forEach(bauer -> {
+                logger.info(bauer.toString());
+            });
+            logger.info("");
+        };
+    }
+
+}
+
+
+
+
+      Kotlin
+     
+
+package com.example.accessingdatajpa
+
+import org.slf4j.LoggerFactory
+import org.springframework.boot.CommandLineRunner
+import org.springframework.boot.autoconfigure.SpringBootApplication
+import org.springframework.boot.runApplication
+import org.springframework.context.annotation.Bean
+
+private val logger = LoggerFactory.getLogger(AccessingDataJpaApplication::class.java)
+
+@SpringBootApplication
+class AccessingDataJpaApplication {
+
+    @Bean
+    fun demo(repository: CustomerRepository) = CommandLineRunner {
+        // save a few customers
+        repository.saveAll(
+            listOf(
+                Customer("Jack", "Bauer"),
+                Customer("Chloe", "O'Brian"),
+                Customer("Kim", "Bauer"),
+                Customer("David", "Palmer"),
+                Customer("Michelle", "Dessler")
+            )
+        )
+
+        // fetch all customers
+        logger.info("Customers found with findAll():")
+        logger.info("-------------------------------")
+        repository.findAll().forEach { customer ->
+            logger.info(customer.toString())
+        }
+        logger.info("")
+
+        // fetch an individual customer by ID
+        val customer = repository.findById(1L).orElseThrow()
+        logger.info("Customer found with findById(1L):")
+        logger.info("--------------------------------")
+        logger.info(customer.toString())
+        logger.info("")
+
+        // fetch customers by last name
+        logger.info("Customer found with findByLastName('Bauer'):")
+        logger.info("--------------------------------------------")
+        repository.findByLastName("Bauer").forEach { bauer ->
+            logger.info(bauer.toString())
+        }
+        logger.info("")
+    }
+}
+
+fun main(args: Array<String>) {
+    runApplication<AccessingDataJpaApplication>(*args)
+}
+
+
+
+
+
+The AccessingDataJpaApplication class includes a demo() method that puts the CustomerRepository through a few tests. First, it fetches the CustomerRepository from the Spring application context. Then it saves a handful of Customer objects, demonstrating the save() method and setting up some data to work with. Next, it calls findAll() to fetch all Customer objects from the database. Then it calls findById() to fetch a single Customer by its ID. Finally, it calls findByLastName() to find all customers whose last name is "Bauer". The demo() method returns a CommandLineRunner bean that automatically runs the code when the application launches.
+
+
+
+
+
+
+By default, Spring Boot enables JPA repository support and looks in the package (and its subpackages) where @SpringBootApplication is located. If your configuration has JPA repository interface definitions located in a package that is not visible, you can point out alternate packages by using @EnableJpaRepositories and its type-safe basePackageClasses=MyRepository.class parameter.
+
+
+
+
+
+***
+Source Link: https://spring.io/guides/gs/accessing-data-jpa
+title: Accessing Data with JPA
+
+Build an executable JAR
+
+
+You can run the application from the command line with Gradle or Maven. You can also build a single executable JAR file that contains all the necessary dependencies, classes, and resources and run that. Building an executable jar makes it easy to ship, version, and deploy the service as an application throughout the development lifecycle, across different environments, and so forth.
+
+
+If you use Gradle, you can run the application by using ./gradlew bootRun. Alternatively, you can build the JAR file by using ./gradlew build and then run the JAR file, as follows:
+
+
+
+
+
+java -jar build/libs/gs-accessing-data-jpa-0.0.1-SNAPSHOT.jar
+
+
+
+
+
+If you use Maven, you can run the application by using ./mvnw spring-boot:run. Alternatively, you can build the JAR file with ./mvnw clean package and then run the JAR file, as follows:
+
+
+
+
+
+java -jar target/gs-accessing-data-jpa-0.0.1-SNAPSHOT.jar
+
+
+
+
+
+When you run your application, you should see output similar to the following:
+
+
+
+
+
+Customers found with findAll():
+Customer[id=1, firstName='Jack', lastName='Bauer']
+Customer[id=2, firstName='Chloe', lastName='O'Brian']
+Customer[id=3, firstName='Kim', lastName='Bauer']
+Customer[id=4, firstName='David', lastName='Palmer']
+Customer[id=5, firstName='Michelle', lastName='Dessler']
+
+Customer found with findById(1L):
+Customer[id=1, firstName='Jack', lastName='Bauer']
+
+Customer found with findByLastName('Bauer'):
+Customer[id=1, firstName='Jack', lastName='Bauer']
+Customer[id=3, firstName='Kim', lastName='Bauer']
+
+
+
+
+
+***
+Source Link: https://spring.io/guides/gs/accessing-data-jpa
+title: Accessing Data with JPA
+
+Summary
+
+
+Congratulations! You have written a simple application that uses Spring Data JPA to save objects to and fetch them from a database, all without writing a concrete repository implementation.
+
+
+
+
+
+
+If you want to expose JPA repositories with a hypermedia-based RESTful front end with little effort, you might want to read Accessing JPA Data with REST.
+
+
+
+
+
+***
+Source Link: https://spring.io/guides/gs/accessing-data-jpa
+title: Accessing Data with JPA
+
+See Also
+
+
+The following guides may also be helpful:
+
+
+
+
+Accessing JPA Data with REST
+
+Accessing Data with Gemfire
+
+Accessing Data with MongoDB
+
+Accessing data with MySQL
+
+Accessing Data with Neo4j
+
+
+
+Want to write a new guide or contribute to an existing one? Check out our contribution guidelines.
+
+
+
+
+
+
+All guides are released with an ASLv2 license for the code, and an Attribution, NoDerivatives creative commons license for the writing.
+
+
+
+
+

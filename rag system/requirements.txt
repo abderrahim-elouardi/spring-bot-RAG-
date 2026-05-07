@@ -1,11 +1,11 @@
 beautifulsoup4
 requests
-langchain_community
-langchain
-langchain_chroma
-langchain_huggingface
-unicodedata
-pathlib
 fpdf2
+langchain
+langchain-community
+langchain-core
+langchain-chroma
+langchain-ollama
+chromadb
 
-#download ollama and then pull the nomic-embed-text model
+# run once: ollama pull nomic-embed-text
