@@ -1,0 +1,86 @@
+[
+  {
+    "heading": "",
+    "content": "This guide walks you through the process of using Spring Cloud Vault to build an application that retrieves its configuration properties from HashiCorp Vault .",
+    "title": "Vault Configuration",
+    "source": "https://spring.io/guides/gs/vault-config"
+  },
+  {
+    "heading": "What You Will Build",
+    "content": "You’ll start up Vault, store configuration properties inside Vault, build a Spring application and connect it with Vault.",
+    "title": "Vault Configuration",
+    "source": "https://spring.io/guides/gs/vault-config"
+  },
+  {
+    "heading": "What You Need",
+    "content": "About 15 minutes\nAbout 15 minutes\nA favorite text editor or IDE\nA favorite text editor or IDE\nJava 17 or later\nJava 17 or later",
+    "title": "Vault Configuration",
+    "source": "https://spring.io/guides/gs/vault-config"
+  },
+  {
+    "heading": "How to Complete This Guide",
+    "content": "Like most Spring Getting Started guides you can start from scratch and complete each step, or you can jump straight to the solution, by viewing the code in this repository .\nTo see the end result in your local environment , you can do one of the following:\nDownload and unzip the source repository for this guide\nDownload and unzip the source repository for this guide\nClone the repository using Git: git clone https://github.com/spring-guides/gs-vault-config.git\nClone the repository using Git: git clone https://github.com/spring-guides/gs-vault-config.git\nFork the repository which lets you request changes to this guide through submission of a pull request\nFork the repository which lets you request changes to this guide through submission of a pull request",
+    "title": "Vault Configuration",
+    "source": "https://spring.io/guides/gs/vault-config"
+  },
+  {
+    "heading": "Starting with Spring Initializr",
+    "content": "You can use this pre-initialized project and click Generate to download a ZIP file. This project is configured to fit the examples in this tutorial.\nTo manually initialize the project:\nNavigate to https://start.spring.io . This service pulls in all the dependencies you need for an application and does most of the setup for you.\nNavigate to https://start.spring.io . This service pulls in all the dependencies you need for an application and does most of the setup for you.\nChoose either Gradle or Maven and the language you want to use. This guide assumes that you chose Java.\nChoose either Gradle or Maven and the language you want to use. This guide assumes that you chose Java.\nClick Dependencies and select Vault Configuration\nClick Dependencies and select Vault Configuration\nClick Generate .\nClick Generate .\nDownload the resulting ZIP file, which is an archive of an application that is configured with your choices.\nDownload the resulting ZIP file, which is an archive of an application that is configured with your choices.",
+    "title": "Vault Configuration",
+    "source": "https://spring.io/guides/gs/vault-config"
+  },
+  {
+    "heading": "Run HashiCorp Vault",
+    "content": "An instance of HashiCorp Vault is required to complete this guide. This guide uses Docker Compose to run a containerized version of HashiCorp Vault. A compose.yaml file has been provided:\nservices:\n  vault:\n    container_name: \"guide-vault\"\n    image: hashicorp/vault:latest\n    environment:\n      VAULT_DEV_ROOT_TOKEN_ID: \"00000000-0000-0000-0000-000000000000\"\n    ports:\n      - \"8200:8200\"\nRun the HashiCorp Vault container with the docker compose up command.",
+    "title": "Vault Configuration",
+    "source": "https://spring.io/guides/gs/vault-config"
+  },
+  {
+    "heading": "Store Configuration in Vault",
+    "content": "Vault is a secrets management system allowing you to store sensitive data which is encrypted at rest.\nYou need to access the Vault container to store the data. Connect to the running Docker container with the command:\ndocker exec -it guide-vault sh\nYou are now running commands inside of the HashiCorp Vault container.\nFirst, you need to set two environment variables to point the Vault CLI to the Vault endpoint and provide an authentication token.\nexport VAULT_TOKEN=\"00000000-0000-0000-0000-000000000000\"\nexport VAULT_ADDR=\"http://127.0.0.1:8200\"\nNow you can store configuration key-value pairs inside Vault. For this guide, you store two key-value pairs:\nvault kv put secret/gs-vault-config example.username=demouser example.password=demopassword\nvault kv put secret/gs-vault-config/cloud example.username=clouduser example.password=cloudpassword\nNow you have written two entries in Vault secret/gs-vault-config and secret/gs-vault-config/cloud .\nWith the Vault container running and the data loaded, you are now ready to turn your attention to the Spring application.",
+    "title": "Vault Configuration",
+    "source": "https://spring.io/guides/gs/vault-config"
+  },
+  {
+    "heading": "Define your configuration class",
+    "content": "Create a simple configuration for your Spring application:\nsrc/main/java/hello/MyConfiguration.java\npackage hello;\n\nimport org.springframework.boot.context.properties.ConfigurationProperties;\n\n/**\n * @author Mark Paluch\n */\n@ConfigurationProperties(\"example\")\npublic class MyConfiguration {\n\n  private String username;\n\n  private String password;\n\n  public String getUsername() {\n    return username;\n  }\n\n  public void setUsername(String username) {\n    this.username = username;\n  }\n\n  public String getPassword() {\n    return password;\n  }\n\n  public void setPassword(String password) {\n    this.password = password;\n  }\n}",
+    "title": "Vault Configuration",
+    "source": "https://spring.io/guides/gs/vault-config"
+  },
+  {
+    "heading": "Configure your application",
+    "content": "Here you configure your application with application.properties . The code below uses Spring Boot’s Config Data API which allows importing configuration from Vault.\nsrc/main/resources/application.properties\nspring.application.name=gs-vault-config\nspring.cloud.vault.token=00000000-0000-0000-0000-000000000000\nspring.cloud.vault.scheme=http\nspring.cloud.vault.kv.enabled=true\nspring.config.import:  vault://",
+    "title": "Vault Configuration",
+    "source": "https://spring.io/guides/gs/vault-config"
+  },
+  {
+    "heading": "Create an Application class",
+    "content": "Here you create an Application class with all the components.\nsrc/main/java/hello/Application.java\npackage hello;\n\nimport org.slf4j.Logger;\nimport org.slf4j.LoggerFactory;\nimport org.springframework.boot.CommandLineRunner;\nimport org.springframework.boot.SpringApplication;\nimport org.springframework.boot.autoconfigure.SpringBootApplication;\nimport org.springframework.boot.context.properties.EnableConfigurationProperties;\n\n@SpringBootApplication\n@EnableConfigurationProperties(MyConfiguration.class)\npublic class Application implements CommandLineRunner {\n\n  private final MyConfiguration configuration;\n\n  public Application(MyConfiguration configuration) {\n    this.configuration = configuration;\n  }\n\n  public static void main(String[] args) {\n    SpringApplication.run(Application.class, args);\n  }\n\n  @Override\n  public void run(String... args) {\n\n    Logger logger = LoggerFactory.getLogger(Application.class);\n\n    logger.info(\"----------------------------------------\");\n    logger.info(\"Configuration properties\");\n    logger.info(\"   example.username is {}\", configuration.getUsername());\n    logger.info(\"   example.password is {}\", configuration.getPassword());\n    logger.info(\"----------------------------------------\");\n  }\n}\nSpring Cloud Vault uses VaultOperations to interact with Vault. Properties from Vault get mapped to MyConfiguration for type-safe access. @EnableConfigurationProperties(MyConfiguration.class) enables configuration property mapping and registers a MyConfiguration bean.\nApplication includes a main() method that autowires an instance of MyConfiguration .",
+    "title": "Vault Configuration",
+    "source": "https://spring.io/guides/gs/vault-config"
+  },
+  {
+    "heading": "Run the Application",
+    "content": "You can run the main method through your IDE. Alternatively, the ./gradlew bootRun and ./mvnw spring-boot:run commands launch the application.\nAs our Application implements CommandLineRunner , the run method is invoked automatically when boot starts. You should see the output:\n----------------------------------------\nConfiguration properties\n        example.username is demouser\n        example.password is demopassword\n----------------------------------------\nNow start the application using the cloud profile. You can do so in Gradle with the ./gradlew bootRun --args='--spring.profiles.active=cloud' command or in Maven with the ./mvnw spring-boot:run -Dspring-boot.run.arguments=\"--spring.profiles.active=cloud\" command. When you run the application with the cloud profile, you see:\n----------------------------------------\nConfiguration properties\n        example.username is clouduser\n        example.password is cloudpassword\n----------------------------------------\nConfiguration properties are bound according to the activated profiles. Spring Cloud Vault constructs a Vault context path from spring.application.name which is gs-vault and appends the profile name ( cloud ) so enabling the cloud profile will fetch additionally configuration properties from secret/gs-vault-config/cloud .",
+    "title": "Vault Configuration",
+    "source": "https://spring.io/guides/gs/vault-config"
+  },
+  {
+    "heading": "Building the Application",
+    "content": "This section describes different ways to run this guide:\nBuilding and executing a JAR file\nBuilding and executing a JAR file\nBuilding and executing a Docker container using Cloud Native Buildpacks\nBuilding and executing a Docker container using Cloud Native Buildpacks\nBuilding and executing a native image\nBuilding and executing a native image\nBuilding and executing a native image container using Cloud Native Buildpacks\nBuilding and executing a native image container using Cloud Native Buildpacks\nRegardless of how you choose to run the application, the output should be the same.\nTo run the application, you can package the application as an executable jar. The ./mvnw clean package command compiles the application to an executable jar. You can then run the jar with the java -jar target/gs-vault-config-0.0.1-SNAPSHOT.jar command.\nAlternatively, if you have a Docker environment available, you could create a Docker image directly from your Maven or Gradle plugin, using buildpacks. With Cloud Native Buildpacks , you can create Docker compatible images that you can run anywhere. Spring Boot includes buildpack support directly for both Maven and Gradle. This means you can type a single command and quickly get a sensible image into a locally running Docker daemon. To create a Docker image using Cloud Native Buildpacks, run the ./mvnw spring-boot:build-image command. With a Docker environment enabled, you can run the application with the docker run --network container:guide-vault docker.io/library/gs-vault-config:0.0.1-SNAPSHOT command.",
+    "title": "Vault Configuration",
+    "source": "https://spring.io/guides/gs/vault-config"
+  },
+  {
+    "heading": "Native Image Support",
+    "content": "Spring Boot also supports compilation to a native image , provided you have a GraalVM distribution on your machine.\nYou can then run the ./mvnw -Pnative native:compile command to generate a native image. When the build completes, you will be able to run the code with a near-instantaneous start up time by executing the target/gs-vault-config command.\nTo create native image container using Maven you should ensure that your pom.xml file uses the spring-boot-starter-parent and the org.graalvm.buildtools:native-maven-plugin . This plugin should be located in the <build> <plugins> section:\n<plugin>\n    <groupId>org.graalvm.buildtools</groupId>\n    <artifactId>native-maven-plugin</artifactId>\n</plugin>\nYou can also create a Native Image using Buildpacks . You can generate a native image by running the ./mvnw -Pnative spring-boot:build-image command. Once the build completes, you can start your application with the docker run --network container:guide-vault docker.io/library/gs-vault-config:0.0.1-SNAPSHOT command.",
+    "title": "Vault Configuration",
+    "source": "https://spring.io/guides/gs/vault-config"
+  },
+  {
+    "heading": "Summary",
+    "content": "Congratulations! You set up a Vault server and wrote a simple application that uses Spring Vault to read secrets into configuration properties and encrypt data with a strong cipher — all without the headache of implementing key management, a cipher mode, and padding.\nWant to write a new guide or contribute to an existing one? Check out our contribution guidelines .",
+    "title": "Vault Configuration",
+    "source": "https://spring.io/guides/gs/vault-config"
+  }
+]

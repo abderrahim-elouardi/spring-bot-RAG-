@@ -1,0 +1,98 @@
+[
+  {
+    "heading": "",
+    "content": "This guide walks you through the process of using Spring Vault to build an application that loads secrets from HashiCorp Vault , a secrets management tool.",
+    "title": "Accessing Vault",
+    "source": "https://spring.io/guides/gs/accessing-vault"
+  },
+  {
+    "heading": "What you’ll build",
+    "content": "You will load secrets stored in Vault and use the transit encryption backend.",
+    "title": "Accessing Vault",
+    "source": "https://spring.io/guides/gs/accessing-vault"
+  },
+  {
+    "heading": "What you’ll need",
+    "content": "About 15 minutes\nAbout 15 minutes\nA favorite text editor or IDE\nA favorite text editor or IDE\nJava 17 or later\nJava 17 or later\nGradle 7.5+ or Maven 3.5+\nGradle 7.5+ or Maven 3.5+\nYou can also import the code straight into your IDE: Spring Tool Suite (STS) IntelliJ IDEA VSCode\nYou can also import the code straight into your IDE:\nSpring Tool Suite (STS)\nSpring Tool Suite (STS)\nIntelliJ IDEA\nIntelliJ IDEA\nVSCode\nVSCode",
+    "title": "Accessing Vault",
+    "source": "https://spring.io/guides/gs/accessing-vault"
+  },
+  {
+    "heading": "How to complete this guide",
+    "content": "Like most Spring Getting Started guides , you can start from scratch and complete each step or you can bypass basic setup steps that are already familiar to you. Either way, you end up with working code.\nTo start from scratch , move on to Build with Gradle .\nTo skip the basics , do the following:\nDownload and unzip the source repository for this guide, or clone it using Git: git clone https://github.com/spring-guides/gs-accessing-vault.git\nDownload and unzip the source repository for this guide, or clone it using Git: git clone https://github.com/spring-guides/gs-accessing-vault.git\ncd into gs-accessing-vault/initial\ncd into gs-accessing-vault/initial\nJump ahead to Install and launch HashiCorp Vault .\nJump ahead to Install and launch HashiCorp Vault .\nWhen you finish , you can check your results against the code in gs-accessing-vault/complete .",
+    "title": "Accessing Vault",
+    "source": "https://spring.io/guides/gs/accessing-vault"
+  },
+  {
+    "heading": "Build with Gradle",
+    "content": "First you set up a basic build script. You can use any build system you like when building apps with Spring, but the code you need to work with Gradle and Maven is included here. If you’re not familiar with either, refer to Building Java Projects with Gradle or Building Java Projects with Maven .",
+    "title": "Accessing Vault",
+    "source": "https://spring.io/guides/gs/accessing-vault"
+  },
+  {
+    "heading": "Create the directory structure",
+    "content": "In a project directory of your choosing, create the following subdirectory structure; for example, with mkdir -p src/main/java/hello on *nix systems:\n└── src\n    └── main\n        └── java\n            └── hello",
+    "title": "Accessing Vault",
+    "source": "https://spring.io/guides/gs/accessing-vault"
+  },
+  {
+    "heading": "Create a Gradle build file",
+    "content": "Below is the initial Gradle build file .\nbuild.gradle\nplugins {\n\tid 'java'\n\tid 'org.springframework.boot' version '4.0.5'\n\tid 'io.spring.dependency-management' version '1.1.7'\n}\n\ngroup = 'gs-accessing-vault'\nversion = '0.0.1-SNAPSHOT'\n\njava {\n\ttoolchain {\n\t\tlanguageVersion = JavaLanguageVersion.of(17)\n\t}\n}\n\nrepositories {\n\tmavenCentral()\n}\n\next {\n\tset('springCloudVersion', \"2025.1.1\")\n}\n\ndependencies {\n\timplementation 'org.springframework.cloud:spring-cloud-starter-vault-config'\n\ttestImplementation 'org.springframework.boot:spring-boot-starter-test'\n\ttestImplementation 'org.springframework.boot:spring-boot-testcontainers'\n\ttestImplementation 'org.testcontainers:testcontainers-junit-jupiter'\n\ttestImplementation 'org.testcontainers:testcontainers-vault'\n\ttestRuntimeOnly 'org.junit.platform:junit-platform-launcher'\n}\n\ndependencyManagement {\n\timports {\n\t\tmavenBom \"org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}\"\n\t}\n}\n\ntasks.named('test') {\n\tuseJUnitPlatform()\n}\nThe Spring Boot gradle plugin provides many convenient features:\nIt collects all the jars on the classpath and builds a single, runnable \"über-jar\", which makes it more convenient to execute and transport your service.\nIt collects all the jars on the classpath and builds a single, runnable \"über-jar\", which makes it more convenient to execute and transport your service.\nIt searches for the public static void main() method to flag as a runnable class.\nIt searches for the public static void main() method to flag as a runnable class.\nIt provides a built-in dependency resolver that sets the version number to match Spring Boot dependencies . You can override any version you wish, but it will default to Boot’s chosen set of versions.\nIt provides a built-in dependency resolver that sets the version number to match Spring Boot dependencies . You can override any version you wish, but it will default to Boot’s chosen set of versions.",
+    "title": "Accessing Vault",
+    "source": "https://spring.io/guides/gs/accessing-vault"
+  },
+  {
+    "heading": "Build with Maven",
+    "content": "First you set up a basic build script. You can use any build system you like when building apps with Spring, but the code you need to work with Maven is included here. If you’re not familiar with Maven, refer to Building Java Projects with Maven .",
+    "title": "Accessing Vault",
+    "source": "https://spring.io/guides/gs/accessing-vault"
+  },
+  {
+    "heading": "Create the directory structure",
+    "content": "In a project directory of your choosing, create the following subdirectory structure; for example, with mkdir -p src/main/java/hello on *nix systems:\n└── src\n    └── main\n        └── java\n            └── hello\npom.xml\n<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<project xmlns=\"http://maven.apache.org/POM/4.0.0\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n\txsi:schemaLocation=\"http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd\">\n\t<modelVersion>4.0.0</modelVersion>\n\t<parent>\n\t\t<groupId>org.springframework.boot</groupId>\n\t\t<artifactId>spring-boot-starter-parent</artifactId>\n\t\t<version>4.0.5</version>\n\t</parent>\n\t<groupId>com.example</groupId>\n\t<artifactId>gs-accessing-vault</artifactId>\n\t<version>0.0.1-SNAPSHOT</version>\n\t<properties>\n\t\t<spring-cloud.version>2025.1.1</spring-cloud.version>\n\t</properties>\n\t<dependencies>\n\t\t<dependency>\n\t\t\t<groupId>org.springframework.cloud</groupId>\n\t\t\t<artifactId>spring-cloud-starter-vault-config</artifactId>\n\t\t</dependency>\n\n\t\t<dependency>\n\t\t\t<groupId>org.springframework.boot</groupId>\n\t\t\t<artifactId>spring-boot-starter-test</artifactId>\n\t\t\t<scope>test</scope>\n\t\t</dependency>\n\t\t<dependency>\n\t\t\t<groupId>org.springframework.boot</groupId>\n\t\t\t<artifactId>spring-boot-testcontainers</artifactId>\n\t\t\t<scope>test</scope>\n\t\t</dependency>\n\t\t<dependency>\n\t\t\t<groupId>org.testcontainers</groupId>\n\t\t\t<artifactId>testcontainers-junit-jupiter</artifactId>\n\t\t\t<scope>test</scope>\n\t\t</dependency>\n\t\t<dependency>\n\t\t\t<groupId>org.testcontainers</groupId>\n\t\t\t<artifactId>testcontainers-vault</artifactId>\n\t\t\t<scope>test</scope>\n\t\t</dependency>\n\t</dependencies>\n\t<dependencyManagement>\n\t\t<dependencies>\n\t\t\t<dependency>\n\t\t\t\t<groupId>org.springframework.cloud</groupId>\n\t\t\t\t<artifactId>spring-cloud-dependencies</artifactId>\n\t\t\t\t<version>${spring-cloud.version}</version>\n\t\t\t\t<type>pom</type>\n\t\t\t\t<scope>import</scope>\n\t\t\t</dependency>\n\t\t</dependencies>\n\t</dependencyManagement>\n\n\t<build>\n\t\t<plugins>\n\t\t\t<plugin>\n\t\t\t\t<groupId>org.springframework.boot</groupId>\n\t\t\t\t<artifactId>spring-boot-maven-plugin</artifactId>\n\t\t\t</plugin>\n\t\t</plugins>\n\t</build>\n\n</project>\nThe Spring Boot Maven plugin provides many convenient features:\nIt collects all the jars on the classpath and builds a single, runnable \"über-jar\", which makes it more convenient to execute and transport your service.\nIt collects all the jars on the classpath and builds a single, runnable \"über-jar\", which makes it more convenient to execute and transport your service.\nIt searches for the public static void main() method to flag as a runnable class.\nIt searches for the public static void main() method to flag as a runnable class.\nIt provides a built-in dependency resolver that sets the version number to match Spring Boot dependencies . You can override any version you wish, but it will default to Boot’s chosen set of versions.\nIt provides a built-in dependency resolver that sets the version number to match Spring Boot dependencies . You can override any version you wish, but it will default to Boot’s chosen set of versions.",
+    "title": "Accessing Vault",
+    "source": "https://spring.io/guides/gs/accessing-vault"
+  },
+  {
+    "heading": "Build with your IDE",
+    "content": "Read how to import this guide straight into Spring Tool Suite .\nRead how to import this guide straight into Spring Tool Suite .\nRead how to work with this guide in IntelliJ IDEA .\nRead how to work with this guide in IntelliJ IDEA .",
+    "title": "Accessing Vault",
+    "source": "https://spring.io/guides/gs/accessing-vault"
+  },
+  {
+    "heading": "Install and launch HashiCorp Vault",
+    "content": ":install-link:https://developer.hashicorp.com/vault/tutorials/get-started/install-binary\nWith your project set up, you can {install-link}[install] and launch HashiCorp Vault.\nIf you are using a Mac with homebrew, this is as simple as:\n$ brew tap hashicorp/tap\n$ brew install hashicorp/tap/vault\nFor other systems with package management, such as Redhat, Ubuntu, Debian, CentOS, and Windows, see the {install-link}[official instructions].\nAfter you install Vault, launch it in a console window. This command also starts up a server process.\n$ vault server --dev --dev-root-token-id=\"00000000-0000-0000-0000-000000000000\"\nYou should see the following as one of the last output lines:\n[INFO ] core: post-unseal setup complete",
+    "title": "Accessing Vault",
+    "source": "https://spring.io/guides/gs/accessing-vault"
+  },
+  {
+    "heading": "Store secrets in Vault",
+    "content": "Vault is a secrets management system allowing you to store sensitive data which is encrypted at rest. It’s ideal to store sensitive configuration details such as passwords, encryption keys, API keys.\nLaunch another console window to store application configuration in Vault using the Vault command line.\nFirst, you need to set two environment variables to point the Vault CLI to the Vault endpoint and provide an authentication token.\n$ export VAULT_TOKEN=\"00000000-0000-0000-0000-000000000000\"\n$ export VAULT_ADDR=\"http://127.0.0.1:8200\"\nNow you can store a configuration key-value pairs inside Vault:\n$ vault kv put secret/github github.oauth2.key=foobar",
+    "title": "Accessing Vault",
+    "source": "https://spring.io/guides/gs/accessing-vault"
+  },
+  {
+    "heading": "Configure your application",
+    "content": "Here you configure your application with application.properties . Spring Cloud Vault is configured with the bootstrap context.\nsrc/main/resources/application.properties\nspring.cloud.vault.token=00000000-0000-0000-0000-000000000000\nspring.cloud.vault.scheme=http",
+    "title": "Accessing Vault",
+    "source": "https://spring.io/guides/gs/accessing-vault"
+  },
+  {
+    "heading": "Create an Application class",
+    "content": "Here you create an Application class with all the components.\nsrc/main/java/hello/Application.java\npackage hello;\n\nimport org.springframework.boot.ApplicationRunner;\nimport org.springframework.boot.SpringApplication;\nimport org.springframework.boot.autoconfigure.SpringBootApplication;\nimport org.springframework.context.annotation.Bean;\nimport org.springframework.vault.core.VaultKeyValueOperationsSupport.KeyValueBackend;\nimport org.springframework.vault.core.VaultSysOperations;\nimport org.springframework.vault.core.VaultTemplate;\nimport org.springframework.vault.core.VaultTransitOperations;\nimport org.springframework.vault.support.VaultMount;\nimport org.springframework.vault.support.VaultResponse;\n\n@SpringBootApplication\npublic class Application {\n\n  public static void main(String[] args) {\n    SpringApplication.run(Application.class, args);\n  }\n\n  @Bean\n  ApplicationRunner runner(VaultTemplate vaultTemplate) {\n    return args -> {\n\n      // You usually would not print a secret to stdout\n      VaultResponse response = vaultTemplate\n          .opsForKeyValue(\"secret\", KeyValueBackend.KV_2).get(\"github\");\n      if (response == null) {\n        throw new IllegalStateException(\"No data found in secret/github\");\n      }\n      System.out.println(\"Value of github.oauth2.key\");\n      System.out.println(\"-------------------------------\");\n      System.out.println(response.getData().get(\"github.oauth2.key\"));\n      System.out.println(\"-------------------------------\");\n      System.out.println();\n\n      // Let's encrypt some data using the Transit backend.\n      VaultTransitOperations transitOperations = vaultTemplate.opsForTransit();\n\n      // We need to setup transit first (assuming you didn't set up it yet).\n      VaultSysOperations sysOperations = vaultTemplate.opsForSys();\n\n      if (!sysOperations.getMounts().containsKey(\"transit/\")) {\n\n        sysOperations.mount(\"transit\", VaultMount.create(\"transit\"));\n\n        transitOperations.createKey(\"foo-key\");\n      }\n\n      // Encrypt a plain-text value\n      String ciphertext = transitOperations.encrypt(\"foo-key\", \"Secure message\");\n\n      System.out.println(\"Encrypted value\");\n      System.out.println(\"-------------------------------\");\n      System.out.println(ciphertext);\n      System.out.println(\"-------------------------------\");\n      System.out.println();\n\n      // Decrypt\n\n      String plaintext = transitOperations.decrypt(\"foo-key\", ciphertext);\n\n      System.out.println(\"Decrypted value\");\n      System.out.println(\"-------------------------------\");\n      System.out.println(plaintext);\n      System.out.println(\"-------------------------------\");\n      System.out.println();\n    };\n  }\n\n}\nSpring Cloud Vault uses VaultOperations to interact with Vault. Properties from Vault get mapped to MyConfiguration for type-safe access. @EnableConfigurationProperties(MyConfiguration.class) enables configuration property mapping and registers a MyConfiguration bean.\nApplication includes a main() method that autowires an instance of MyConfiguration .",
+    "title": "Accessing Vault",
+    "source": "https://spring.io/guides/gs/accessing-vault"
+  },
+  {
+    "heading": "Build an executable JAR",
+    "content": "You can run the application from the command line with Gradle or Maven. You can also build a single executable JAR file that contains all the necessary dependencies, classes, and resources and run that. Building an executable jar makes it easy to ship, version, and deploy the service as an application throughout the development lifecycle, across different environments, and so forth.\nIf you use Gradle, you can run the application by using ./gradlew bootRun . Alternatively, you can build the JAR file by using ./gradlew build and then run the JAR file, as follows:\njava -jar build/libs/gs-accessing-vault-0.0.1-SNAPSHOT.jar\nIf you use Maven, you can run the application by using ./mvnw spring-boot:run . Alternatively, you can build the JAR file with ./mvnw clean package and then run the JAR file, as follows:\njava -jar target/gs-accessing-vault-0.0.1-SNAPSHOT.jar\nAs our Application exposes an ApplicationRunner bean, it is invoked automatically when Spring Boot starts. You should see something like this:\nValue of github.oauth2.key\n-------------------------------\nfoobar\n-------------------------------\n\nEncrypted value\n-------------------------------\nvault:v1:2wgVE2PXiR9o55xbyur5KHJl8IwyGDkDU4l1SZScUq6BuqZYgTopwvc4\n-------------------------------\n\nDecrypted value\n-------------------------------\nSecure message\n-------------------------------",
+    "title": "Accessing Vault",
+    "source": "https://spring.io/guides/gs/accessing-vault"
+  },
+  {
+    "heading": "Summary",
+    "content": "Congratulations! You set up a Vault server and wrote a simple application that uses Spring Vault to read secrets and encrypt data with a strong cipher — all without the headache of implementing key management, a cipher mode, and padding.\nWant to write a new guide or contribute to an existing one? Check out our contribution guidelines .",
+    "title": "Accessing Vault",
+    "source": "https://spring.io/guides/gs/accessing-vault"
+  }
+]
