@@ -1,1 +1,525 @@
-getting started building restful web service skip main content spring overview trending generative ai cloud architecture pattern microservices reactive event driven application type web application serverless batch learn getting started quickstart guide academy course get certified project overview project spring boot spring framework spring cloud spring ai spring data spring integration spring batch spring security foundational project micrometer reactor development tool spring tool spring initializr resource blog release calendar version mapping release highlight security advisory github orgs spring project spring cloud community overview event author enterprise overview long term support automated upgrade governance compliance modern app development guide building restful web service guide walk process creating hello world restful web service spring build build service accept http get request respond json representation greeting following listing show id 1 content hello world customize greeting optional name parameter query string following listing show name parameter value override default value world reflected response following listing show id 1 content hello user need 15 minute favorite text editor ide java 17 later gradle 7 5 maven 3 5 also import code straight ide spring tool suite sts intellij idea vscode complete guide like spring getting started guide start scratch complete step bypass basic setup step already familiar either way end working code start scratch move starting spring initializr skip basic following download unzip source repository guide clone using git git clone cd g rest service initial jump ahead create resource representation class finish check result code g rest service complete starting spring initializr use pre initialized project click generate download zip file project configured fit example tutorial manually initialize project navigate service pull dependency need application setup choose either gradle maven language want use type rest service artifact form field click dependency select spring web click generate download resulting zip file archive web application configured choice ide spring initializr integration complete process ide also fork project github open ide editor create resource representation class set project build system create web service begin process thinking service interaction service handle get request greeting optionally name parameter query string get request return 200 ok response json body represents greeting resemble following output id 1 content hello world id field unique identifier greeting content textual representation greeting model greeting representation create resource representation class provide java record class src main java com example restservice greeting java kotlin data class src main kotlin com example restservice greeting kt id content data following listing show java package com example restservice public record greeting long id string content kotlin package com example restservice data class greeting val id long val content string application us jackson json library automatically marshal instance type greeting json jackson included default web starter create resource controller spring approach building restful web service http request handled controller component identified restcontroller annotation greetingcontroller class shown following listing handle get request greeting returning new instance greeting class create resource controller src main java com example restservice greetingcontroller java java src main kotlin com example restservice greetingcontroller kt kotlin following content java package com example restservice import java util concurrent atomic atomiclong import org springframework web bind annotation getmapping import org springframework web bind annotation requestparam import org springframework web bind annotation restcontroller restcontroller public class greetingcontroller private static final string template hello private final atomiclong counter new atomiclong getmapping greeting public greeting greeting requestparam defaultvalue world string name return new greeting counter incrementandget template formatted name kotlin package com example restservice import java util concurrent atomic atomiclong import org springframework web bind annotation getmapping import org springframework web bind annotation requestparam import org springframework web bind annotation restcontroller private const val template hello restcontroller class greetingcontroller private val counter atomiclong getmapping greeting fun greeting requestparam name string world greeting counter incrementandget template format name controller concise simple plenty going hood break step step getmapping annotation ensures http get request greeting mapped greeting method companion annotation http verb e g postmapping post also requestmapping annotation derive serve synonym e g requestmapping method get requestparam bind value query string parameter name name parameter greeting method name parameter absent request defaultvalue world used implementation method body creates return new greeting object id content attribute based next value counter format given name using greeting template key difference traditional mvc controller restful web service controller shown earlier way http response body created rather relying view technology perform server side rendering greeting data html restful web service controller populates return greeting object object data written directly http response json code us spring restcontroller annotation mark class controller every method return domain object instead view shorthand including controller responsebody greeting object must converted json thanks spring http message converter support need conversion manually jackson classpath spring jacksonjson automatically chosen convert greeting instance json run service spring initializr creates application class case need modify class following listing show restserviceapplication application class src main java com example restservice restserviceapplication java java src main kotlin com example restservice restserviceapplication kt kotlin java package com example restservice import org springframework boot springapplication import org springframework boot autoconfigure springbootapplication springbootapplication public class restserviceapplication public static void main string args springapplication run restserviceapplication class args kotlin package com example restservice import org springframework boot autoconfigure springbootapplication import org springframework boot runapplication springbootapplication class restserviceapplication fun main args array string runapplication restserviceapplication args springbootapplication convenience annotation add following configuration tag class source bean definition application context enableautoconfiguration tell spring boot start adding bean based classpath setting bean various property setting example spring webmvc classpath annotation flag application web application activates key behavior setting dispatcherservlet componentscan tell spring look component configuration service com example package letting find controller main method us spring boot springapplication run method launch application notice single line xml web xml file either web application 100 pure java deal configuring plumbing infrastructure build executable jar run application command line gradle maven also build single executable jar file contains necessary dependency class resource run building executable jar make easy ship version deploy service application throughout development lifecycle across different environment forth use gradle run application using gradlew bootrun alternatively build jar file using gradlew build run jar file follows java jar build libs g rest service 0 0 1 snapshot jar use maven run application using mvnw spring boot run alternatively build jar file mvnw clean package run jar file follows java jar target g rest service 0 0 1 snapshot jar logging output displayed service running within second test service service visit see id 1 content hello world provide name query string parameter visiting notice value content attribute change hello world hello user following listing show id 2 content hello user change demonstrates requestparam arrangement greetingcontroller working expected name parameter given default value world explicitly overridden query string notice also id attribute changed 1 2 prof working greetingcontroller instance across multiple request counter field incremented call expected summary congratulation developed restful web service spring see also following guide may also helpful accessing gemfire data rest accessing mongodb data rest accessing data mysql accessing jpa data rest accessing neo4j data rest consuming restful web service consuming restful web service angularjs consuming restful web service jquery consuming restful web service rest j securing web application building rest service spring react j spring data rest building application spring boot creating api documentation restdocs enabling cross origin request restful web service building hypermedia driven restful web service circuit breaker want write new guide contribute existing one check contribution guideline guide released aslv2 license code attribution noderivatives creative common license writing get code go repo free work cloud complete guide cloud spring academy go spring academy project spring boot spring generative ai microservices reactive event driven cloud web application serverless batch learn quickstart guide course get certified project resource blog release calendar version mapping release highlight security advisory community event author enterprise long term support automated upgrade governance compliance modern app development thank get spring newsletter stay connected spring newsletter subscribe copyright 2005 2026 broadcom right reserved term broadcom refers broadcom inc subsidiary term use privacy trademark guideline apache apache tomcat apache kafka apache cassandra apache geode trademark registered trademark apache software foundation united state country java java se java ee openjdk trademark oracle affiliate kubernetes registered trademark linux foundation united state country linux registered trademark linus torvalds united state country window microsoft azure registered trademark microsoft corporation aws amazon web service trademark registered trademark amazon com inc affiliate trademark copyright property respective owner mentioned informative purpose name may trademark respective owner
+
+Source Link: https://spring.io/guides/gs/rest-service/
+title: Building a RESTful Web Service
+
+What You Will Build
+
+
+You will build a service that will accept HTTP GET requests at http://localhost:8080/greeting.
+
+
+It will respond with a JSON representation of a greeting, as the following listing shows:
+
+
+
+
+
+{"id":1,"content":"Hello, World!"}
+
+
+
+
+
+You can customize the greeting with an optional name parameter in the query string, as the following listing shows:
+
+
+
+
+
+http://localhost:8080/greeting?name=User
+
+
+
+
+
+The name parameter value overrides the default value of World and is reflected in the response, as the following listing shows:
+
+
+
+
+
+{"id":1,"content":"Hello, User!"}
+
+
+
+
+
+***
+Source Link: https://spring.io/guides/gs/rest-service/
+title: Building a RESTful Web Service
+
+What You Need
+
+
+
+
+About 15 minutes
+
+A favorite text editor or IDE
+
+Java 17 or later
+
+Gradle 7.5+ or Maven 3.5+
+
+You can also import the code straight into your IDE:
+
+
+
+Spring Tool Suite (STS)
+
+IntelliJ IDEA
+
+VSCode
+
+
+
+
+
+***
+Source Link: https://spring.io/guides/gs/rest-service/
+title: Building a RESTful Web Service
+
+How to complete this guide
+
+
+Like most Spring Getting Started guides, you can start from scratch and complete each step or you can bypass basic setup steps that are already familiar to you. Either way, you end up with working code.
+
+
+To start from scratch, move on to Starting with Spring Initializr.
+
+
+To skip the basics, do the following:
+
+
+
+
+Download and unzip the source repository for this guide, or clone it using Git: git clone https://github.com/spring-guides/gs-rest-service.git
+
+cd into gs-rest-service/initial
+
+Jump ahead to Create a Resource Representation Class.
+
+
+
+When you finish, you can check your results against the code in gs-rest-service/complete.
+
+
+***
+Source Link: https://spring.io/guides/gs/rest-service/
+title: Building a RESTful Web Service
+
+Starting with Spring Initializr
+
+
+You can use this pre-initialized project and click Generate to download a ZIP file. This project is configured to fit the examples in this tutorial.
+
+
+To manually initialize the project:
+
+
+
+
+Navigate to https://start.spring.io. This service pulls in all the dependencies you need for an application and does most of the setup for you.
+
+Choose either Gradle or Maven and the language you want to use.
+
+Type "rest-service" in the "Artifact" form field.
+
+Click Dependencies and select Spring Web.
+
+Click Generate.
+
+Download the resulting ZIP file, which is an archive of a web application that is configured with your choices.
+
+
+
+
+
+
+
+If your IDE has the Spring Initializr integration, you can complete this process from your IDE.
+
+
+
+
+
+
+
+
+
+You can also fork the project from Github and open it in your IDE or other editor.
+
+
+
+
+
+***
+Source Link: https://spring.io/guides/gs/rest-service/
+title: Building a RESTful Web Service
+
+Create a Resource Representation Class
+
+
+Now that you have set up the project and build system, you can create your web service.
+
+
+Begin the process by thinking about service interactions.
+
+
+The service will handle GET requests for /greeting, optionally with a name parameter in the query string. The GET request should return a 200 OK response with JSON in the body that represents a greeting. It should resemble the following output:
+
+
+
+
+
+{
+    "id": 1,
+    "content": "Hello, World!"
+}
+
+
+
+
+
+The id field is a unique identifier for the greeting, and content is the textual representation of the greeting.
+
+
+To model the greeting representation, create a resource representation class. To do so, provide a Java record class (in src/main/java/com/example/restservice/Greeting.java) or a Kotlin data class (in `src/main/kotlin/com/example/restservice/Greeting.kt) for the id and content data, as the following listing shows:
+
+
+
+    Java
+   
+
+package com.example.restservice;
+
+public record Greeting(long id, String content) { }
+
+
+
+
+    Kotlin
+   
+
+package com.example.restservice
+
+data class Greeting(val id: Long, val content: String)
+
+
+
+
+
+
+
+
+
+This application uses the Jackson JSON library to automatically marshal instances of type Greeting into JSON. Jackson is included by default by the web starter.
+
+
+
+
+
+
+
+***
+Source Link: https://spring.io/guides/gs/rest-service/
+title: Building a RESTful Web Service
+
+Create a Resource Controller
+
+
+In Spring’s approach to building RESTful web services, HTTP requests are handled by a controller. These components are identified by the @RestController annotation, and the GreetingController class shown in the following listing handles GET requests for /greeting by returning a new instance of the Greeting class.
+
+
+Create a resource controller (in src/main/java/com/example/restservice/GreetingController.java for Java or src/main/kotlin/com/example/restservice/GreetingController.kt for Kotlin) with the following contents:
+
+
+
+    Java
+   
+
+package com.example.restservice;
+
+import java.util.concurrent.atomic.AtomicLong;
+
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+public class GreetingController {
+
+  private static final String template = "Hello, %s!";
+  private final AtomicLong counter = new AtomicLong();
+
+  @GetMapping("/greeting")
+  public Greeting greeting(@RequestParam(defaultValue = "World") String name) {
+    return new Greeting(counter.incrementAndGet(), template.formatted(name));
+  }
+}
+
+
+
+
+    Kotlin
+   
+
+package com.example.restservice
+
+import java.util.concurrent.atomic.AtomicLong
+
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.RequestParam
+import org.springframework.web.bind.annotation.RestController
+
+private const val template = "Hello, %s!"
+
+@RestController
+class GreetingController {
+
+  private val counter = AtomicLong()
+
+  @GetMapping("/greeting")
+  fun greeting(@RequestParam name: String = "World") =
+    Greeting(counter.incrementAndGet(), template.format(name))
+
+}
+
+
+
+This controller is concise and simple, but there is plenty going on under the hood. We break it down step by step.
+
+
+The @GetMapping annotation ensures that HTTP GET requests to /greeting are mapped to the greeting() method.
+
+
+
+
+
+
+There are companion annotations for other HTTP verbs (e.g. @PostMapping for POST). There is also a @RequestMapping annotation that they all derive from, and can serve as a synonym (e.g. @RequestMapping(method=GET)).
+
+
+
+
+
+@RequestParam binds the value of the query string parameter name into the name parameter of the greeting() method. If the name parameter is absent in the request, the defaultValue of World is used.
+
+
+The implementation of the method body creates and returns a new Greeting object with id and content attributes based on the next value from the counter and formats the given name by using the greeting template.
+
+
+A key difference between a traditional MVC controller and the RESTful web service controller shown earlier is the way that the HTTP response body is created. Rather than relying on a view technology to perform server-side rendering of the greeting data to HTML, this RESTful web service controller populates and returns a Greeting object. The object data will be written directly to the HTTP response as JSON.
+
+
+This code uses Spring @RestController annotation, which marks the class as a controller where every method returns a domain object instead of a view. It is shorthand for including both @Controller and @ResponseBody.
+
+
+The Greeting object must be converted to JSON. Thanks to Spring’s HTTP message converter support, you need not do this conversion manually. Because Jackson is on the classpath, Spring’s JacksonJsonHttpMessageConverter is automatically chosen to convert the Greeting instance to JSON.
+
+
+***
+Source Link: https://spring.io/guides/gs/rest-service/
+title: Building a RESTful Web Service
+
+Run the Service
+
+
+The Spring Initializr creates an application class for you. In this case, you do not need to further modify the class. The following listing shows the RestServiceApplication application class (in src/main/java/com/example/restservice/RestServiceApplication.java for Java or src/main/kotlin/com/example/restservice/RestServiceApplication.kt for Kotlin):
+
+
+
+    Java
+   
+
+package com.example.restservice;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+public class RestServiceApplication {
+
+  public static void main(String[] args) {
+    SpringApplication.run(RestServiceApplication.class, args);
+  }
+
+}
+
+
+
+
+    Kotlin
+   
+
+package com.example.restservice
+
+import org.springframework.boot.autoconfigure.SpringBootApplication
+import org.springframework.boot.runApplication
+
+@SpringBootApplication
+class RestServiceApplication
+
+fun main(args: Array<String>) {
+  runApplication<RestServiceApplication>(*args)
+}
+
+
+
+@SpringBootApplication is a convenience annotation that adds all of the following:
+
+
+
+
+@Configuration: Tags the class as a source of bean definitions for the application context.
+
+@EnableAutoConfiguration: Tells Spring Boot to start adding beans based on classpath settings, other beans, and various property settings. For example, if spring-webmvc is on the classpath, this annotation flags the application as a web application and activates key behaviors, such as setting up a DispatcherServlet.
+
+@ComponentScan: Tells Spring to look for other components, configurations, and services in the com/example package, letting it find the controllers.
+
+
+
+The main() method uses Spring Boot’s SpringApplication.run() method to launch an application. Did you notice that there was not a single line of XML? There is no web.xml file, either. This web application is 100% pure Java and you did not have to deal with configuring any plumbing or infrastructure.
+
+
+Build an executable JAR
+
+You can run the application from the command line with Gradle or Maven. You can also build a single executable JAR file that contains all the necessary dependencies, classes, and resources and run that. Building an executable jar makes it easy to ship, version, and deploy the service as an application throughout the development lifecycle, across different environments, and so forth.
+
+
+If you use Gradle, you can run the application by using ./gradlew bootRun. Alternatively, you can build the JAR file by using ./gradlew build and then run the JAR file, as follows:
+
+
+
+
+
+java -jar build/libs/gs-rest-service-0.0.1-SNAPSHOT.jar
+
+
+
+
+
+If you use Maven, you can run the application by using ./mvnw spring-boot:run. Alternatively, you can build the JAR file with ./mvnw clean package and then run the JAR file, as follows:
+
+
+
+
+
+java -jar target/gs-rest-service-0.0.1-SNAPSHOT.jar
+
+
+
+
+
+Logging output is displayed. The service should be up and running within a few seconds.
+
+
+
+***
+Source Link: https://spring.io/guides/gs/rest-service/
+title: Building a RESTful Web Service
+
+Test the Service
+
+
+Now that the service is up, visit http://localhost:8080/greeting, where you should see:
+
+
+
+
+
+{"id":1,"content":"Hello, World!"}
+
+
+
+
+
+Provide a name query string parameter by visiting http://localhost:8080/greeting?name=User. Notice how the value of the content attribute changes from Hello, World! to Hello, User!, as the following listing shows:
+
+
+
+
+
+{"id":2,"content":"Hello, User!"}
+
+
+
+
+
+This change demonstrates that the @RequestParam arrangement in GreetingController is working as expected. The name parameter has been given a default value of World but can be explicitly overridden through the query string.
+
+
+Notice also how the id attribute has changed from 1 to 2. This proves that you are working against the same GreetingController instance across multiple requests and that its counter field is being incremented on each call as expected.
+
+
+***
+Source Link: https://spring.io/guides/gs/rest-service/
+title: Building a RESTful Web Service
+
+Summary
+
+
+Congratulations! You have just developed a RESTful web service with Spring.
+
+
+***
+Source Link: https://spring.io/guides/gs/rest-service/
+title: Building a RESTful Web Service
+
+See Also
+
+
+The following guides may also be helpful:
+
+
+
+
+Accessing GemFire Data with REST
+
+Accessing MongoDB Data with REST
+
+Accessing data with MySQL
+
+Accessing JPA Data with REST
+
+Accessing Neo4j Data with REST
+
+Consuming a RESTful Web Service
+
+Consuming a RESTful Web Service with AngularJS
+
+Consuming a RESTful Web Service with jQuery
+
+Consuming a RESTful Web Service with rest.js
+
+Securing a Web Application
+
+Building REST services with Spring
+
+React.js and Spring Data REST
+
+Building an Application with Spring Boot
+
+Creating API Documentation with Restdocs
+
+Enabling Cross Origin Requests for a RESTful Web Service
+
+Building a Hypermedia-Driven RESTful Web Service
+
+Circuit Breaker
+
+
+
+Want to write a new guide or contribute to an existing one? Check out our contribution guidelines.
+
+
+
+
+
+
+All guides are released with an ASLv2 license for the code, and an Attribution, NoDerivatives creative commons license for the writing.
+
+
+
+
+

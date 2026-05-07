@@ -1,1 +1,576 @@
-getting started spring boot docker skip main content spring overview trending generative ai cloud architecture pattern microservices reactive event driven application type web application serverless batch learn getting started quickstart guide academy course get certified project overview project spring boot spring framework spring cloud spring ai spring data spring integration spring batch spring security foundational project micrometer reactor development tool spring tool spring initializr resource blog release calendar version mapping release highlight security advisory github orgs spring project spring cloud community overview event author enterprise overview long term support automated upgrade governance compliance modern app development guide spring boot docker guide walk process building docker image running spring boot application start basic dockerfile make tweak show couple option use build plugins maven gradle instead docker getting started guide scope limited basic need building container image production use many thing consider possible cover short guide also topical guide docker cover wider range choice much detail build docker linux container management toolkit social aspect letting user publish container image consume published others docker image recipe running containerized process guide build one simple spring boot application need 15 minute favorite text editor ide java 17 later gradle 7 5 maven 3 5 also import code straight ide spring tool suite sts intellij idea vscode also need docker see detail setting docker machine proceeding verify run docker command shell starting spring initializr use pre initialized project click generate download zip file project configured fit example tutorial manually initialize project navigate service pull dependency need application setup choose either gradle maven language want use guide assumes chose java click dependency select spring web click generate download resulting zip file archive web application configured choice ide spring initializr integration complete process ide also fork project github open ide editor set spring boot application create simple application src main java hello application java package hello import org springframework boot springapplication import org springframework boot autoconfigure springbootapplication import org springframework web bind annotation requestmapping import org springframework web bind annotation restcontroller springbootapplication restcontroller public class application requestmapping public string home return hello docker world public static void main string args springapplication run application class args class flagged springbootapplication restcontroller meaning ready use spring mvc handle web request requestmapping map home method sends hello world response main method us spring boot springapplication run method launch application run application without docker container host o use gradle run following command gradlew build java jar build libs g spring boot docker 0 0 1 snapshot jar use maven run following command mvnw package java jar target g spring boot docker 0 0 1 snapshot jar go localhost 8080 see hello docker world message containerize docker simple dockerfile file format us specify layer image create following dockerfile spring boot project example 1 dockerfile eclipse temurin 17 arg jar file target jar copy jar file app jar entrypoint java jar app jar use gradle run following command docker build build arg jar file build libs jar springio g spring boot docker use maven run following command docker build springio g spring boot docker command build image tag springio g spring boot docker dockerfile simple need run spring boot app frill java jar file copy using copy command project jar file container app jar run entrypoint array form dockerfile entrypoint used shell wrapping java process reduce tomcat startup time used add system property pointing dev urandom source entropy necessary anymore jdk 8 later running application user privilege help mitigate risk see example thread stackexchange important improvement dockerfile run application non root user example 2 dockerfile eclipse temurin 17 run addgroup spring adduser spring g spring user spring spring arg jar file target jar copy jar file app jar entrypoint java jar app jar see username application startup log build run application docker build springio g spring boot docker docker run p 8080 8080 springio g spring boot docker note started first info log entry spring boot v2 2 1 release 2020 04 23 07 29 41 729 info 1 main hello application starting application b94c86e91cf9 pid 1 app started spring also clean separation dependency application resource spring boot fat jar file use fact improve performance key create layer container filesystem layer cached build time runtime runtimes want frequently changing resource usually class static resource application layered slowly changing resource thus use slightly different implementation dockerfile example 3 dockerfile eclipse temurin 17 run addgroup spring adduser spring g spring user spring spring arg dependency target dependency copy dependency boot inf lib app lib copy dependency meta inf app meta inf copy dependency boot inf class app entrypoint java cp app app lib hello application dockerfile dependency parameter pointing directory unpacked fat jar use dependency parameter gradle run following command mkdir p build dependency cd build dependency jar xf libs jar use dependency parameter maven run following command mkdir p target dependency cd target dependency jar xf jar get right already contains boot inf lib directory dependency jar boot inf class directory application class notice use application main class hello application faster using indirection provided fat jar launcher exploding jar file result classpath order different runtime well behaved well written application care may see behavior change dependency carefully managed gradle build need add explicit build argument docker command line docker build build arg dependency build dependency springio g spring boot docker build image maven use simpler docker command line docker build springio g spring boot docker use gradle could change dockerfile make default value dependency match location unpacked archive instead building docker command line might want use build plugin spring boot support building container maven gradle using build plugin google also open source tool called jib maven gradle plugins probably interesting thing approach need dockerfile build image using standard container format get docker build also work environment docker installed uncommon build server default image generated default buildpacks run application root check configuration guide gradle maven change default setting build docker image gradle build tagged docker image gradle one command gradlew bootbuildimage imagename springio g spring boot docker build docker image maven get started quickly run spring boot image generator without even changing pom xml remember dockerfile still ignored mvnw spring boot build image dspring boot build image imagename springio g spring boot docker push docker registry need permission push default change image prefix dockerhub id docker login make sure authenticated run docker push docker push example fails unless part springio organization dockerhub however change configuration match docker id succeed new tagged deployed image register docker publish anything run docker image built locally built docker command line spring boot still locally tagged image run like docker run p 8080 8080 springio g spring boot docker container memory limit unset configuring jvm 1g container calculated jvm memory configuration xx maxdirectmemorysize 10m xx maxmetaspacesize 86381k xx reservedcodecachesize 240m xss1m xmx450194k head room 0 loaded class count 12837 thread count 250 total memory 1073741824 2015 03 31 13 25 48 035 info 1 main b c e tomcatembeddedservletcontainer tomcat started port 8080 2015 03 31 13 25 48 037 info 1 main hello application started application 5 613 second jvm running 7 293 buildpack us memory calculator runtime size jvm fit container application available visit say hello docker world running see list container similar following example docker p container id image command created status port name 81c723d22865 springio g spring boot docker latest java djava secur 34 second ago 33 second 0 0 0 0 8080 8080 tcp goofy brown shut run docker stop container id previous listing different docker stop goofy brown 81c723d22865 like also delete container persisted filesystem somewhere var lib docker finished docker rm goofy brown using spring profile running freshly minted docker image spring profile easy passing environment variable docker run command prod profile docker run e spring profile active prod p 8080 8080 springio g spring boot docker dev profile docker run e spring profile active dev p 8080 8080 springio g spring boot docker debugging application docker container debug application use jpda transport treat container like remote server enable feature pas java agent setting java opts variable map agent port localhost container run docker mac limitation access container ip without black magic usage docker run e java tool option agentlib jdwp transport dt socket address 5005 server suspend n p 8080 8080 p 5005 5005 springio g spring boot docker summary congratulation created docker container spring boot application default spring boot application run port 8080 inside container mapped port host using p command line see also following guide may also helpful serving web content spring mvc building application spring boot want write new guide contribute existing one check contribution guideline guide released aslv2 license code attribution noderivatives creative common license writing get code go repo spring generative ai microservices reactive event driven cloud web application serverless batch learn quickstart guide course get certified project resource blog release calendar version mapping release highlight security advisory community event author enterprise long term support automated upgrade governance compliance modern app development thank get spring newsletter stay connected spring newsletter subscribe copyright 2005 2026 broadcom right reserved term broadcom refers broadcom inc subsidiary term use privacy trademark guideline apache apache tomcat apache kafka apache cassandra apache geode trademark registered trademark apache software foundation united state country java java se java ee openjdk trademark oracle affiliate kubernetes registered trademark linux foundation united state country linux registered trademark linus torvalds united state country window microsoft azure registered trademark microsoft corporation aws amazon web service trademark registered trademark amazon com inc affiliate trademark copyright property respective owner mentioned informative purpose name may trademark respective owner
+
+Source Link: https://spring.io/guides/gs/spring-security/
+title: Building a Docker Image with Spring Boot
+
+What You Will Build
+
+
+Docker is a Linux container management toolkit with a “social” aspect, letting users publish container images and consume those published by others. A Docker image is a recipe for running a containerized process. In this guide, we build one for a simple Spring boot application.
+
+
+***
+Source Link: https://spring.io/guides/gs/spring-security/
+title: Building a Docker Image with Spring Boot
+
+What You Will Need
+
+
+
+
+About 15 minutes
+
+A favorite text editor or IDE
+
+Java 17 or later
+
+Gradle 7.5+ or Maven 3.5+
+
+You can also import the code straight into your IDE:
+
+
+
+Spring Tool Suite (STS)
+
+IntelliJ IDEA
+
+VSCode
+
+
+
+
+
+You also need Docker, see https://docs.docker.com/installation/#installation for details on setting Docker up for your machine. Before proceeding further, verify you can run docker commands from the shell.
+
+
+***
+Source Link: https://spring.io/guides/gs/spring-security/
+title: Building a Docker Image with Spring Boot
+
+Starting with Spring Initializr
+
+
+You can use this pre-initialized project and click Generate to download a ZIP file. This project is configured to fit the examples in this tutorial.
+
+
+To manually initialize the project:
+
+
+
+
+Navigate to https://start.spring.io. This service pulls in all the dependencies you need for an application and does most of the setup for you.
+
+Choose either Gradle or Maven and the language you want to use. This guide assumes that you chose Java.
+
+Click Dependencies and select Spring Web.
+
+Click Generate.
+
+Download the resulting ZIP file, which is an archive of a web application that is configured with your choices.
+
+
+
+
+
+
+
+If your IDE has the Spring Initializr integration, you can complete this process from your IDE.
+
+
+
+
+
+
+
+
+
+You can also fork the project from Github and open it in your IDE or other editor.
+
+
+
+
+
+***
+Source Link: https://spring.io/guides/gs/spring-security/
+title: Building a Docker Image with Spring Boot
+
+Set up a Spring Boot Application
+
+
+Now you can create a simple application:
+
+
+
+
+src/main/java/hello/Application.java
+
+
+
+package hello;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@SpringBootApplication
+@RestController
+public class Application {
+
+  @RequestMapping("/")
+  public String home() {
+    return "Hello Docker World";
+  }
+
+  public static void main(String[] args) {
+    SpringApplication.run(Application.class, args);
+  }
+
+}
+
+
+
+
+
+The class is flagged as a @SpringBootApplication and as a @RestController, meaning that it is ready for use by Spring MVC to handle web requests. @RequestMapping maps / to the home() method, which sends a Hello World response. The main() method uses Spring Boot’s SpringApplication.run() method to launch an application.
+
+
+Now we can run the application without the Docker container (that is, in the host OS):
+
+
+If you use Gradle, run the following command:
+
+
+
+
+
+./gradlew build && java -jar build/libs/gs-spring-boot-docker-0.0.1-SNAPSHOT.jar
+
+
+
+
+
+If you use Maven, run the following command:
+
+
+
+
+
+./mvnw package && java -jar target/gs-spring-boot-docker-0.0.1-SNAPSHOT.jar
+
+
+
+
+
+Then go to localhost:8080 to see your “Hello Docker World” message.
+
+
+***
+Source Link: https://spring.io/guides/gs/spring-security/
+title: Building a Docker Image with Spring Boot
+
+Containerize It
+
+
+Docker has a simple "Dockerfile" file format that it uses to specify the “layers” of an image. Create the following Dockerfile in your Spring Boot project:
+
+
+
+    Example 1. Dockerfile
+   
+
+
+
+FROM eclipse-temurin:17
+ARG JAR_FILE=target/*.jar
+COPY ${JAR_FILE} app.jar
+ENTRYPOINT ["java","-jar","/app.jar"]
+
+
+
+
+
+If you use Gradle, you can run it with the following command:
+
+
+
+
+
+docker build --build-arg JAR_FILE=build/libs/\*.jar -t springio/gs-spring-boot-docker .
+
+
+
+
+
+If you use Maven, you can run it with the following command:
+
+
+
+
+
+docker build -t springio/gs-spring-boot-docker .
+
+
+
+
+
+This command builds an image and tags it as springio/gs-spring-boot-docker.
+
+
+This Dockerfile is very simple, but it is all you need to run a Spring Boot app with no frills: just Java and a JAR file: it copies (using the COPY command) the project JAR file into the container as app.jar, which is run in the ENTRYPOINT. The array form of the Dockerfile ENTRYPOINT is used so that there is no shell wrapping the Java process.
+
+
+
+
+
+
+To reduce Tomcat startup time, we used to add a system property pointing to /dev/urandom as a source of entropy. This is not necessary anymore with JDK 8 or later.
+
+
+
+
+
+Running applications with user privileges helps to mitigate some risks (see, for example, a thread on StackExchange). So, an important improvement to the Dockerfile is to run the application as a non-root user:
+
+
+
+    Example 2. Dockerfile
+   
+
+
+
+FROM eclipse-temurin:17
+RUN addgroup -S spring && adduser -S spring -G spring
+USER spring:spring
+ARG JAR_FILE=target/*.jar
+COPY ${JAR_FILE} app.jar
+ENTRYPOINT ["java","-jar","/app.jar"]
+
+
+
+
+
+You can see the username in the application startup logs when you build and run the application:
+
+
+
+
+
+docker build -t springio/gs-spring-boot-docker .
+docker run -p 8080:8080 springio/gs-spring-boot-docker
+
+
+
+
+
+Note the started by in the first INFO log entry:
+
+
+
+
+
+ :: Spring Boot ::        (v2.2.1.RELEASE)
+
+2020-04-23 07:29:41.729  INFO 1 --- [           main] hello.Application                        : Starting Application on b94c86e91cf9 with PID 1 (/app started by spring in /)
+...
+
+
+
+
+
+Also, there is a clean separation between dependencies and application resources in a Spring Boot fat JAR file, and we can use that fact to improve performance. The key is to create layers in the container filesystem. The layers are cached both at build time and at runtime (in most runtimes), so we want the most frequently changing resources (usually the class and static resources in the application itself) to be layered after the more slowly changing resources. Thus, we use a slightly different implementation of the Dockerfile:
+
+
+
+    Example 3. Dockerfile
+   
+
+
+
+FROM eclipse-temurin:17
+RUN addgroup -S spring && adduser -S spring -G spring
+USER spring:spring
+ARG DEPENDENCY=target/dependency
+COPY ${DEPENDENCY}/BOOT-INF/lib /app/lib
+COPY ${DEPENDENCY}/META-INF /app/META-INF
+COPY ${DEPENDENCY}/BOOT-INF/classes /app
+ENTRYPOINT ["java","-cp","app:app/lib/*","hello.Application"]
+
+
+
+
+
+This Dockerfile has a DEPENDENCY parameter pointing to a directory where we have unpacked the fat JAR. To use the DEPENDENCY parameter with Gradle, run the following command:
+
+
+
+
+
+mkdir -p build/dependency && (cd build/dependency; jar -xf ../libs/*.jar)
+
+
+
+
+
+To use the DEPENDENCY parameter with Maven, run the following command:
+
+
+
+
+
+mkdir -p target/dependency && (cd target/dependency; jar -xf ../*.jar)
+
+
+
+
+
+If we get that right, it already contains a BOOT-INF/lib directory with the dependency JARs in it, and a BOOT-INF/classes directory with the application classes in it. Notice that we use the application’s own main class: hello.Application. (This is faster than using the indirection provided by the fat JAR launcher.)
+
+
+
+
+
+
+Exploding the JAR file can result in the classpath order being different at runtime. A well-behaved and well-written application should not care about this, but you may see behavior changes if the dependencies are not carefully managed.
+
+
+
+
+
+From a Gradle build, you need to add the explicit build arguments in the Docker command line:
+
+
+
+
+
+docker build --build-arg DEPENDENCY=build/dependency -t springio/gs-spring-boot-docker .
+
+
+
+
+
+To build the image in Maven, you can use a simpler Docker command line:
+
+
+
+
+
+docker build -t springio/gs-spring-boot-docker .
+
+
+
+
+
+
+
+
+
+If you use only Gradle, you could change the Dockerfile to make the default value of DEPENDENCY match the location of the unpacked archive.
+
+
+
+
+
+Instead of building with the Docker command line, you might want to use a build plugin. Spring Boot supports building a container from Maven or Gradle by using its own build plugin. Google also has an open source tool called Jib that has Maven and Gradle plugins. Probably the most interesting thing about this approach is that you do not need a Dockerfile. You can build the image by using the same standard container format as you get from docker build. Also, it can work in environments where docker is not installed (not uncommon in build servers).
+
+
+
+
+
+
+By default, the images generated by the default buildpacks do not run your application as root. Check the configuration guide for Gradle or Maven for how to change the default settings.
+
+
+
+
+
+Build a Docker Image with Gradle
+
+You can build a tagged docker image with Gradle in one command:
+
+
+
+
+
+./gradlew bootBuildImage --imageName=springio/gs-spring-boot-docker
+
+
+
+
+
+
+Build a Docker Image with Maven
+
+To get started quickly, you can run the Spring Boot image generator without even changing your pom.xml (remember that the Dockerfile, if it is still, there is ignored):
+
+
+
+
+
+./mvnw spring-boot:build-image -Dspring-boot.build-image.imageName=springio/gs-spring-boot-docker
+
+
+
+
+
+To push to a Docker registry, you need to have permission to push, which you do not have by default. Change the image prefix to your own Dockerhub ID and docker login to make sure you are authenticated before you run Docker.
+
+
+
+After the Push
+
+A docker push in the example fails (unless you are part of the "springio" organization at Dockerhub). However, if you change the configuration to match your own docker ID, it should succeed. You then have a new tagged, deployed image.
+
+
+You do NOT have to register with docker or publish anything to run a docker image that was built locally. If you built with Docker (from the command line or from Spring Boot), you still have a locally tagged image, and you can run it like this:
+
+
+
+
+
+$ docker run -p 8080:8080 -t springio/gs-spring-boot-docker
+Container memory limit unset. Configuring JVM for 1G container.
+Calculated JVM Memory Configuration: -XX:MaxDirectMemorySize=10M -XX:MaxMetaspaceSize=86381K -XX:ReservedCodeCacheSize=240M -Xss1M -Xmx450194K (Head Room: 0%, Loaded Class Count: 12837, Thread Count: 250, Total Memory: 1073741824)
+....
+2015-03-31 13:25:48.035  INFO 1 --- [           main] s.b.c.e.t.TomcatEmbeddedServletContainer : Tomcat started on port(s): 8080 (http)
+2015-03-31 13:25:48.037  INFO 1 --- [           main] hello.Application                        : Started Application in 5.613 seconds (JVM running for 7.293)
+
+
+
+
+
+
+
+
+
+The buildpack uses a memory calculator at runtime to size the JVM to fit the container.
+
+
+
+
+
+The application is then available on http://localhost:8080 (visit that and it says, “Hello Docker World”).
+
+
+When it is running, you can see in the list of containers, similar to the following example:
+
+
+
+
+
+$ docker ps
+CONTAINER ID        IMAGE                                   COMMAND                  CREATED             STATUS              PORTS                    NAMES
+81c723d22865        springio/gs-spring-boot-docker:latest   "java -Djava.secur..."   34 seconds ago      Up 33 seconds       0.0.0.0:8080->8080/tcp   goofy_brown
+
+
+
+
+
+To shut it down again, you can run docker stop with the container ID from the previous listing (yours will be different):
+
+
+
+
+
+docker stop goofy_brown
+81c723d22865
+
+
+
+
+
+If you like, you can also delete the container (it is persisted in your filesystem somewhere under /var/lib/docker) when you are finished with it:
+
+
+
+
+
+docker rm goofy_brown
+
+
+
+
+
+
+Using Spring Profiles
+
+Running your freshly minted Docker image with Spring profiles is as easy as passing an environment variable to the Docker run command (for the prod profile):
+
+
+
+
+
+docker run -e "SPRING_PROFILES_ACTIVE=prod" -p 8080:8080 -t springio/gs-spring-boot-docker
+
+
+
+
+
+You can do the same for the dev profile:
+
+
+
+
+
+docker run -e "SPRING_PROFILES_ACTIVE=dev" -p 8080:8080 -t springio/gs-spring-boot-docker
+
+
+
+
+
+
+Debugging the Application in a Docker Container
+
+To debug the application, you can use JPDA Transport. We treat the container like a remote server. To enable this feature, pass Java agent settings in the JAVA_OPTS variable and map the agent’s port to localhost during a container run. With Docker for Mac, there is a limitation because we can’t access the container by IP without black magic usage.
+
+
+
+
+
+docker run -e "JAVA_TOOL_OPTIONS=-agentlib:jdwp=transport=dt_socket,address=5005,server=y,suspend=n" -p 8080:8080 -p 5005:5005 -t springio/gs-spring-boot-docker
+
+
+
+
+
+
+***
+Source Link: https://spring.io/guides/gs/spring-security/
+title: Building a Docker Image with Spring Boot
+
+Summary
+
+
+Congratulations! You have created a Docker container for a Spring Boot application! By default, Spring Boot applications run on port 8080 inside the container, and we mapped that to the same port on the host by using -p on the command line.
+
+
+***
+Source Link: https://spring.io/guides/gs/spring-security/
+title: Building a Docker Image with Spring Boot
+
+See Also
+
+
+The following guides may also be helpful:
+
+
+
+
+Serving Web Content with Spring MVC
+
+Building an Application with Spring Boot
+
+
+
+Want to write a new guide or contribute to an existing one? Check out our contribution guidelines.
+
+
+
+
+
+
+All guides are released with an ASLv2 license for the code, and an Attribution, NoDerivatives creative commons license for the writing.
+
+
+
+
+

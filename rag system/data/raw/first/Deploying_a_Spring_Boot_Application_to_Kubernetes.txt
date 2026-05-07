@@ -1,1 +1,283 @@
-getting started spring boot kubernetes skip main content spring overview trending generative ai cloud architecture pattern microservices reactive event driven application type web application serverless batch learn getting started quickstart guide academy course get certified project overview project spring boot spring framework spring cloud spring ai spring data spring integration spring batch spring security foundational project micrometer reactor development tool spring tool spring initializr resource blog release calendar version mapping release highlight security advisory github orgs spring project spring cloud community overview event author enterprise overview long term support automated upgrade governance compliance modern app development guide spring boot kubernetes guide walk process deploying spring boot application kubernetes choose many way thing spring boot kubernetes intention guide get going quickly possible discus alternative go detail get production build kubernetes open source system automating deployment scaling management containerized application group container make application logical unit easy management discovery guide build deploy simple spring boot application also find getting started guide topical guide docker cover background building container image need need linux linux like command line command line example guide work linux macos terminal shell wsl window also need kubernetes cluster command line tool kubectl create cluster locally using kind docker minikube alternatively use cloud provider google cloud platform amazon web service microsoft azure proceeding verify run kubectl command shell following example us kind kubectl cluster info kubernetes master running kubedns running debug diagnose cluster problem use kubectl cluster info dump also run following command kubectl get name type cluster ip external ip port age service kubernetes clusterip 10 43 0 1 none 443 tcp 7m13s create spring boot application first create spring boot application one prefer use already github could clone terminal git java installed already alternatively create application scratch using start spring io curl dependency webflux actuator type maven project tar xzvf build application mvnw install take couple minute first time dependency cached fast see result build build successful see jar file similar following l l target jar rw r r 1 root root 19463334 nov 15 11 54 target demo 0 0 1 snapshot jar jar executable java jar target jar applicaiton built http endpoint actuator dependency added downloaded project see output similar following log startup 2019 11 15 12 12 35 333 info 13912 main b e web endpointlinksresolver exposing 2 endpoint beneath base path actuator 2019 11 15 12 12 36 448 info 13912 main b web embedded netty nettywebserver netty started port 8080 curl endpoint another terminal curl localhost 8080 actuator jq link self href templated false health path href templated true health href templated false info href templated false complete step press ctrl c stop application containerize application multiple option containerizing spring boot application long already building spring boot jar file need call plugin directly following command us maven mvnw spring boot build image following command us gradle gradlew bootbuildimage run container locally docker run p 8080 8080 demo 0 0 1 snapshot check work another terminal curl localhost 8080 actuator health finish stopping container push image unless authenticate dockerhub docker login already image work authenticated could docker tag demo 0 0 1 snapshot springguides demo docker push springguides demo real life image need pushed dockerhub accessible repository kubernetes pull image inside kubelets node usually connected local docker daemon purpose scenario omit push use image already testing workarounds make docker push work insecure local registry instance scope guide deploy application kubernetes container run expose port 8080 need make kubernetes run yaml avoid look edit yaml ask kubectl generate thing might vary image name deployed container repository use tag instead one kubectl create deployment demo image springguides demo dry run yaml deployment yaml echo deployment yaml kubectl create service clusterip demo tcp 8080 8080 dry run yaml deployment yaml take yaml generated edit like apply kubectl apply f deployment yaml deployment apps demo created service demo created check application running kubectl get name ready status restarts age pod demo 658b7f4997 qfw9l 1 1 running 0 146m name type cluster ip external ip port age service kubernetes clusterip 10 43 0 1 none 443 tcp 2d18h service demo clusterip 10 43 138 213 none 8080 tcp 21h name ready date available age deployment apps demo 1 1 1 1 21h name desired current ready age replicaset apps demo 658b7f4997 1 1 1 21h repeat kubectl get demo pod show status running need able connect application exposed service kubernetes one way work great development time create ssh tunnel kubectl port forward svc demo 8080 8080 verify app running another terminal curl localhost 8080 actuator health status get code go repo spring generative ai microservices reactive event driven cloud web application serverless batch learn quickstart guide course get certified project resource blog release calendar version mapping release highlight security advisory community event author enterprise long term support automated upgrade governance compliance modern app development thank get spring newsletter stay connected spring newsletter subscribe copyright 2005 2026 broadcom right reserved term broadcom refers broadcom inc subsidiary term use privacy trademark guideline apache apache tomcat apache kafka apache cassandra apache geode trademark registered trademark apache software foundation united state country java java se java ee openjdk trademark oracle affiliate kubernetes registered trademark linux foundation united state country linux registered trademark linus torvalds united state country window microsoft azure registered trademark microsoft corporation aws amazon web service trademark registered trademark amazon com inc affiliate trademark copyright property respective owner mentioned informative purpose name may trademark respective owner
+
+Source Link: https://spring.io/guides/gs/spring-boot-docker/
+title: Deploying a Spring Boot Application to Kubernetes
+
+What You Will Build
+
+
+Kubernetes is an open-source system for automating the deployment, scaling, and management of containerized applications. It groups containers that make up an application into logical units for easy management and discovery. In this guide, we build and deploy a simple Spring boot application.
+
+
+
+
+
+
+You can also find a Getting Started Guide and a Topical Guide on Docker, which cover some of the background on building a container image.
+
+
+
+
+
+***
+Source Link: https://spring.io/guides/gs/spring-boot-docker/
+title: Deploying a Spring Boot Application to Kubernetes
+
+What You Will Need
+
+
+You will need a Linux or Linux-like command line. Command line examples in this guide work on Linux, a MacOS terminal with a shell, or WSL on Windows.
+
+
+You will also need a Kubernetes cluster and the command line tool Kubectl. You can create a cluster locally by using Kind (on Docker) or Minikube. Alternatively, you can use a cloud provider, such as Google Cloud Platform, Amazon Web Services, or Microsoft Azure. Before proceeding further, verify that you can run kubectl commands from the shell. The following example uses kind:
+
+
+
+$ kubectl cluster-info
+Kubernetes master is running at https://127.0.0.1:46253
+KubeDNS is running at https://127.0.0.1:46253/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
+
+To further debug and diagnose cluster problems, use 'kubectl cluster-info dump'.
+
+
+
+You should also run the following command:
+
+
+
+$ kubectl get all
+NAME                 TYPE        CLUSTER-IP   EXTERNAL-IP   PORT(S)   AGE
+service/kubernetes   ClusterIP   10.43.0.1    <none>        443/TCP   7m13s
+
+
+
+***
+Source Link: https://spring.io/guides/gs/spring-boot-docker/
+title: Deploying a Spring Boot Application to Kubernetes
+
+Create a Spring Boot Application
+
+
+First, we create a Spring Boot application. If you have one you prefer to use already in github, you could clone it in the terminal (git and java are installed already). Alternatively, you can create an application from scratch by using start.spring.io:
+
+
+
+curl https://start.spring.io/starter.tgz -d dependencies=webflux,actuator -d type=maven-project | tar -xzvf -
+
+
+
+You can then build the application:
+
+
+
+./mvnw install
+
+
+
+
+
+
+
+It will take a couple of minutes the first time, but, once the dependencies are all cached, it will be fast.
+
+
+
+
+
+Then you can see the result of the build. If the build was successful, you should see a JAR file similar to the following:
+
+
+
+ls -l target/*.jar
+-rw-r--r-- 1 root root 19463334 Nov 15 11:54 target/demo-0.0.1-SNAPSHOT.jar
+
+
+
+The JAR is executable:
+
+
+
+$ java -jar target/*.jar
+
+
+
+The applicaiton has some built-in HTTP endpoints because of the actuator dependency we added when we downloaded the project. You should see output similar to the following in the logs on startup:
+
+
+
+...
+2019-11-15 12:12:35.333  INFO 13912 --- [           main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 2 endpoint(s) beneath base path '/actuator'
+2019-11-15 12:12:36.448  INFO 13912 --- [           main] o.s.b.web.embedded.netty.NettyWebServer  : Netty started on port(s): 8080
+...
+
+
+
+Then you can curl the endpoints in another terminal:
+
+
+
+$ curl localhost:8080/actuator | jq .
+{
+  "_links": {
+    "self": {
+      "href": "http://localhost:8080/actuator",
+      "templated": false
+    },
+    "health-path": {
+      "href": "http://localhost:8080/actuator/health/{*path}",
+      "templated": true
+    },
+    "health": {
+      "href": "http://localhost:8080/actuator/health",
+      "templated": false
+    },
+    "info": {
+      "href": "http://localhost:8080/actuator/info",
+      "templated": false
+    }
+  }
+}
+
+
+
+To complete this step, press Ctrl+C to stop the application.
+
+
+***
+Source Link: https://spring.io/guides/gs/spring-boot-docker/
+title: Deploying a Spring Boot Application to Kubernetes
+
+Containerize the Application
+
+
+There are multiple options for containerizing a Spring Boot application. As long as you are already building a Spring Boot jar file, you only need to call the plugin directly. The following command uses Maven:
+
+
+
+$ ./mvnw spring-boot:build-image
+
+
+
+The following command uses Gradle:
+
+
+
+$ ./gradlew bootBuildImage
+
+
+
+You can run the container locally:
+
+
+
+$ docker run -p 8080:8080 demo:0.0.1-SNAPSHOT
+
+
+
+Then you can check that it works in another terminal:
+
+
+
+$ curl localhost:8080/actuator/health
+
+
+
+Finish by stopping the container.
+
+
+You cannot push the image unless you authenticate with Dockerhub (docker login), but there is already an image there that should work. If you were authenticated, you could:
+
+
+
+$ docker tag demo:0.0.1-SNAPSHOT springguides/demo
+$ docker push springguides/demo
+
+
+
+In real life, the image needs to be pushed to Dockerhub (or some other accessible repository) because Kubernetes pulls the image from inside its Kubelets (nodes), which are not usually connected to the local docker daemon. For the purposes of this scenario, you can omit the push and use the image that is already there.
+
+
+
+
+
+
+For testing, there are workarounds that make docker push work with an insecure local registry (for instance) but that is out of scope for this guide.
+
+
+
+
+
+***
+Source Link: https://spring.io/guides/gs/spring-boot-docker/
+title: Deploying a Spring Boot Application to Kubernetes
+
+Deploy the Application to Kubernetes
+
+
+Now you have a container that runs and exposes port 8080, so all you need to make Kubernetes run it is some YAML. To avoid having to look at or edit YAML, for now, you can ask kubectl to generate it for you. The only thing that might vary here is the --image name. If you deployed your container to your own repository, use its tag instead of this one:
+
+
+
+$ kubectl create deployment demo --image=springguides/demo --dry-run -o=yaml > deployment.yaml
+$ echo --- >> deployment.yaml
+$ kubectl create service clusterip demo --tcp=8080:8080 --dry-run -o=yaml >> deployment.yaml
+
+
+
+You can take the YAML generated above and edit it if you like, or you can apply it as is:
+
+
+
+$ kubectl apply -f deployment.yaml
+deployment.apps/demo created
+service/demo created
+
+
+
+Check that the application is running:
+
+
+
+$ kubectl get all
+NAME                             READY     STATUS      RESTARTS   AGE
+pod/demo-658b7f4997-qfw9l        1/1       Running     0          146m
+
+NAME                 TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)    AGE
+service/kubernetes   ClusterIP   10.43.0.1       <none>        443/TCP    2d18h
+service/demo         ClusterIP   10.43.138.213   <none>        8080/TCP   21h
+
+NAME                   READY     UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/demo   1/1       1            1           21h
+
+NAME                              DESIRED   CURRENT   READY     AGE
+replicaset.apps/demo-658b7f4997   1         1         1         21h
+d
+
+
+
+
+
+
+
+Repeat kubectl get all until the demo pod shows its status as Running.
+
+
+
+
+
+Now you need to be able to connect to the application, which you have exposed as a Service in Kubernetes. One way to do that, which works great at development time, is to create an SSH tunnel:
+
+
+
+$ kubectl port-forward svc/demo 8080:8080
+
+
+
+Then you can verify that the app is running in another terminal:
+
+
+
+$ curl localhost:8080/actuator/health
+{"status":"UP"}
+
+
+
