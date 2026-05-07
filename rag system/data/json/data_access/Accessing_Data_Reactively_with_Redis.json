@@ -1,0 +1,104 @@
+[
+  {
+    "heading": "",
+    "content": "This guide walks you through the process of creating a functional reactive application that uses Spring Data to interact with Redis using the non-blocking Lettuce driver.",
+    "title": "Accessing Data Reactively with Redis",
+    "source": "https://spring.io/guides/gs/spring-data-reactive-redis"
+  },
+  {
+    "heading": "What You Will Build",
+    "content": "You’ll build a Spring application that uses Spring Data Redis and Project Reactor to interact with a Redis data store reactively, storing and retrieving Coffee objects without blocking. This application uses Reactor’s Publisher implementations based upon the Reactive Streams specification, namely Mono (for a Publisher returning 0 or 1 value) and Flux (for a Publisher returning 0 to n values).",
+    "title": "Accessing Data Reactively with Redis",
+    "source": "https://spring.io/guides/gs/spring-data-reactive-redis"
+  },
+  {
+    "heading": "What You Need",
+    "content": "About 15 minutes\nAbout 15 minutes\nA favorite text editor or IDE\nA favorite text editor or IDE\nJava 17 or later\nJava 17 or later",
+    "title": "Accessing Data Reactively with Redis",
+    "source": "https://spring.io/guides/gs/spring-data-reactive-redis"
+  },
+  {
+    "heading": "How to Complete This Guide",
+    "content": "Like most Spring Getting Started guides you can start from scratch and complete each step, or you can jump straight to the solution, by viewing the code in this repository .\nTo see the end result in your local environment , you can do one of the following:\nDownload and unzip the source repository for this guide\nDownload and unzip the source repository for this guide\nClone the repository using Git: git clone https://github.com/spring-guides/gs-spring-data-reactive-redis.git\nClone the repository using Git: git clone https://github.com/spring-guides/gs-spring-data-reactive-redis.git\nFork the repository which lets you request changes to this guide through submission of a pull request\nFork the repository which lets you request changes to this guide through submission of a pull request",
+    "title": "Accessing Data Reactively with Redis",
+    "source": "https://spring.io/guides/gs/spring-data-reactive-redis"
+  },
+  {
+    "heading": "Setting up the Redis Server",
+    "content": "Before you can build a messaging application, you need to set up the server to handle receiving and sending messages. This guide assumes that you use Spring Boot Docker Compose support . A prerequisite of this approach is that your development machine has a Docker environment, such as Docker Desktop , available. Add a dependency spring-boot-docker-compose that does the following:\nSearch for a compose.yml and other common compose filenames in your working directory\nSearch for a compose.yml and other common compose filenames in your working directory\nCall docker compose up with the discovered compose.yml\nCall docker compose up with the discovered compose.yml\nCreate service connection beans for each supported container\nCreate service connection beans for each supported container\nCall docker compose stop when the application is shutdown\nCall docker compose stop when the application is shutdown\nTo use Docker Compose support, you need only follow this guide. Based on the dependencies you pull in, Spring Boot finds the correct compose.yml file and start your Docker container when you run your application.\nIf you choose to run the Redis server yourself instead of using Spring Boot Docker Compose support, you have a few options: - Download the server and manually run it - Install with Homebrew, if you use a Mac - Manually run the compose.yaml file with docker compose up\nIf you go with any of these alternate approaches, you should remove the spring-boot-docker-compose dependency from the Maven or Gradle build file. You also need to add configuration to an application.properties file, as described in greater detail in the Preparing to Build the Application section. As mentioned earlier, this guide assumes that you use Docker Compose support in Spring Boot, so additional changes to application.properties are not required at this point.",
+    "title": "Accessing Data Reactively with Redis",
+    "source": "https://spring.io/guides/gs/spring-data-reactive-redis"
+  },
+  {
+    "heading": "Starting with Spring Initializr",
+    "content": "You can use this pre-initialized project and click Generate to download a ZIP file. This project is configured to fit the examples in this tutorial.\nTo manually initialize the project:\nNavigate to https://start.spring.io . This service pulls in all the dependencies you need for an application and does most of the setup for you.\nNavigate to https://start.spring.io . This service pulls in all the dependencies you need for an application and does most of the setup for you.\nChoose either Gradle or Maven and the language you want to use. This guide assumes that you chose Java.\nChoose either Gradle or Maven and the language you want to use. This guide assumes that you chose Java.\nClick Dependencies and select Spring Reactive Web , Spring Data Reactive Redis , and Docker Compose Support .\nClick Dependencies and select Spring Reactive Web , Spring Data Reactive Redis , and Docker Compose Support .\nClick Generate .\nClick Generate .\nDownload the resulting ZIP file, which is an archive of a web application that is configured with your choices.\nDownload the resulting ZIP file, which is an archive of a web application that is configured with your choices.",
+    "title": "Accessing Data Reactively with Redis",
+    "source": "https://spring.io/guides/gs/spring-data-reactive-redis"
+  },
+  {
+    "heading": "Create a Domain Class",
+    "content": "Create a record representing a type of coffee we wish to stock in our coffee catalog:\nsrc/main/java/com/example/demo/Coffee.java\npackage com.example.demo;\n\npublic record Coffee(String id, String name) {\n}",
+    "title": "Accessing Data Reactively with Redis",
+    "source": "https://spring.io/guides/gs/spring-data-reactive-redis"
+  },
+  {
+    "heading": "Create a Configuration Class",
+    "content": "Create a class that includes Spring Beans that support reactive Redis operations:\nsrc/main/java/com/example/demo/CoffeeConfiguration.java\npackage com.example.demo;\n\nimport org.springframework.context.annotation.Bean;\nimport org.springframework.context.annotation.Configuration;\nimport org.springframework.data.redis.connection.ReactiveRedisConnectionFactory;\nimport org.springframework.data.redis.core.ReactiveRedisOperations;\nimport org.springframework.data.redis.core.ReactiveRedisTemplate;\nimport org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;\nimport org.springframework.data.redis.serializer.RedisSerializationContext;\nimport org.springframework.data.redis.serializer.StringRedisSerializer;\n\n@Configuration\npublic class CoffeeConfiguration {\n  @Bean\n  ReactiveRedisOperations<String, Coffee> redisOperations(ReactiveRedisConnectionFactory factory) {\n    Jackson2JsonRedisSerializer<Coffee> serializer = new Jackson2JsonRedisSerializer<>(Coffee.class);\n\n    RedisSerializationContext.RedisSerializationContextBuilder<String, Coffee> builder =\n        RedisSerializationContext.newSerializationContext(new StringRedisSerializer());\n\n    RedisSerializationContext<String, Coffee> context = builder.value(serializer).build();\n\n    return new ReactiveRedisTemplate<>(factory, context);\n  }\n\n}",
+    "title": "Accessing Data Reactively with Redis",
+    "source": "https://spring.io/guides/gs/spring-data-reactive-redis"
+  },
+  {
+    "heading": "Create a Spring Bean to Load Data",
+    "content": "Create a Spring Bean to load sample data for our application when we start it:\nsrc/main/java/com/example/demo/CoffeeLoader.java\npackage com.example.demo;\n\nimport org.springframework.data.redis.connection.ReactiveRedisConnectionFactory;\nimport org.springframework.data.redis.core.ReactiveRedisOperations;\nimport org.springframework.stereotype.Component;\nimport reactor.core.publisher.Flux;\n\nimport jakarta.annotation.PostConstruct;\nimport java.util.UUID;\n\n@Component\npublic class CoffeeLoader {\n  private final ReactiveRedisConnectionFactory factory;\n  private final ReactiveRedisOperations<String, Coffee> coffeeOps;\n\n  public CoffeeLoader(ReactiveRedisConnectionFactory factory, ReactiveRedisOperations<String, Coffee> coffeeOps) {\n    this.factory = factory;\n    this.coffeeOps = coffeeOps;\n  }\n\n  @PostConstruct\n  public void loadData() {\n    factory.getReactiveConnection().serverCommands().flushAll().thenMany(\n        Flux.just(\"Jet Black Redis\", \"Darth Redis\", \"Black Alert Redis\")\n            .map(name -> new Coffee(UUID.randomUUID().toString(), name))\n            .flatMap(coffee -> coffeeOps.opsForValue().set(coffee.id(), coffee)))\n        .thenMany(coffeeOps.keys(\"*\")\n            .flatMap(coffeeOps.opsForValue()::get))\n        .subscribe(System.out::println);\n  }\n}",
+    "title": "Accessing Data Reactively with Redis",
+    "source": "https://spring.io/guides/gs/spring-data-reactive-redis"
+  },
+  {
+    "heading": "Create a RestController",
+    "content": "Create a RestController to provide an external interface for our application:\nsrc/main/java/com/example/demo/CoffeeController.java\npackage com.example.demo;\n\nimport org.springframework.data.redis.core.ReactiveRedisOperations;\nimport org.springframework.web.bind.annotation.GetMapping;\nimport org.springframework.web.bind.annotation.RestController;\nimport reactor.core.publisher.Flux;\n\n@RestController\npublic class CoffeeController {\n  private final ReactiveRedisOperations<String, Coffee> coffeeOps;\n\n  CoffeeController(ReactiveRedisOperations<String, Coffee> coffeeOps) {\n    this.coffeeOps = coffeeOps;\n  }\n\n  @GetMapping(\"/coffees\")\n  public Flux<Coffee> all() {\n    return coffeeOps.keys(\"*\")\n        .flatMap(coffeeOps.opsForValue()::get);\n  }\n}",
+    "title": "Accessing Data Reactively with Redis",
+    "source": "https://spring.io/guides/gs/spring-data-reactive-redis"
+  },
+  {
+    "heading": "Run the Application",
+    "content": "You can run the main method through your IDE. Note that, if you have cloned the project from the solution repository, your IDE may look in the wrong place for the compose.yaml file. You can configure your IDE to look in the correct place or you could use the command line to run the application. The ./gradlew bootRun and ./mvnw spring-boot:run commands will launch the application and automatically find the compose.yaml file.",
+    "title": "Accessing Data Reactively with Redis",
+    "source": "https://spring.io/guides/gs/spring-data-reactive-redis"
+  },
+  {
+    "heading": "Test the Application",
+    "content": "With the application running, run the following command from a new terminal:\ncurl http://localhost:8080/coffees\nYou should see the following output:\n[\n  {\n    \"id\": \"04ce0843-c9f8-40f6-942f-1ff643c1d426\",\n    \"name\": \"Jet Black Redis\"\n  },\n  {\n    \"id\": \"e2a0d798-5fa4-48a2-a45c-7770d8bb82bf\",\n    \"name\": \"Black Alert Redis\"\n  },\n  {\n    \"id\": \"13f13e3a-0798-44b7-8ae4-b319b227bb19\",\n    \"name\": \"Darth Redis\"\n  }\n]",
+    "title": "Accessing Data Reactively with Redis",
+    "source": "https://spring.io/guides/gs/spring-data-reactive-redis"
+  },
+  {
+    "heading": "Preparing to Build the Application",
+    "content": "To run the code without Spring Boot Docker Compose support, you need a version of Redis running locally to connect to. To do this, you can use Docker Compose, but you must first make two changes to the compose.yaml file. First, modify the ports entry in compose.yaml to be '6379:6379' . Second, add a container_name .\nThe compose.yaml should now be:\nservices:\n  redis:\n    container_name: 'guide-redis'\n    image: 'redis:latest'\n    ports:\n      - '6379:6379'\nYou can now run docker compose up to start the Redis server. Now you should have an external Redis server that is ready to accept requests. You can rerun the application and see the same output using your external Redis server.",
+    "title": "Accessing Data Reactively with Redis",
+    "source": "https://spring.io/guides/gs/spring-data-reactive-redis"
+  },
+  {
+    "heading": "Building the Application",
+    "content": "This section describes different ways to run this guide:\nBuilding and executing a JAR file\nBuilding and executing a JAR file\nBuilding and executing a Docker container using Cloud Native Buildpacks\nBuilding and executing a Docker container using Cloud Native Buildpacks\nBuilding and executing a native image\nBuilding and executing a native image\nBuilding and executing a native image container using Cloud Native Buildpacks\nBuilding and executing a native image container using Cloud Native Buildpacks\nRegardless of how you choose to run the application, the output should be the same.\nTo run the application, you can package the application as an executable jar. The ./mvnw clean package command compiles the application to an executable jar. You can then run the jar with the java -jar target/demo-0.0.1-SNAPSHOT.jar command.\nAlternatively, if you have a Docker environment available, you could create a Docker image directly from your Maven or Gradle plugin, using buildpacks. With Cloud Native Buildpacks , you can create Docker compatible images that you can run anywhere. Spring Boot includes buildpack support directly for both Maven and Gradle. This means you can type a single command and quickly get a sensible image into a locally running Docker daemon. To create a Docker image using Cloud Native Buildpacks, run the ./mvnw spring-boot:build-image command. With a Docker environment enabled, you can run the application with the docker run --network container:guide-redis docker.io/library/demo:0.0.1-SNAPSHOT command.",
+    "title": "Accessing Data Reactively with Redis",
+    "source": "https://spring.io/guides/gs/spring-data-reactive-redis"
+  },
+  {
+    "heading": "Native Image Support",
+    "content": "Spring Boot also supports compilation to a native image , provided you have a GraalVM distribution on your machine.\nYou can then run the ./mvnw -Pnative native:compile command to generate a native image. When the build completes, you will be able to run the code with a near-instantaneous start up time by executing the target/demo command.\nTo create native image container using Maven you should ensure that your pom.xml file uses the spring-boot-starter-parent and the org.graalvm.buildtools:native-maven-plugin . This plugin should be located in the <build> <plugins> section:\n<plugin>\n    <groupId>org.graalvm.buildtools</groupId>\n    <artifactId>native-maven-plugin</artifactId>\n</plugin>\nYou can also create a Native Image using Buildpacks . You can generate a native image by running the ./mvnw -Pnative spring-boot:build-image command. Once the build completes, you can start your application with the docker run --network container:guide-redis docker.io/library/demo:0.0.1-SNAPSHOT command.",
+    "title": "Accessing Data Reactively with Redis",
+    "source": "https://spring.io/guides/gs/spring-data-reactive-redis"
+  },
+  {
+    "heading": "Test the Application in Docker",
+    "content": "If you ran the application using a Docker instruction (shown earlier), a simple curl command from a terminal or command line will no longer work. This is because we run our containers in a Docker network that is not accessible from the terminal or command line. To run curl commands, we can start a third container to run our curl commands and attach it to the same network.\nFirst, obtain an interactive shell to a new container that runs on the same network as the Redis container and the application:\ndocker run --rm --network container:guide-redis -it alpine\nNext, from the shell inside the container, install curl:\napk add curl\nFinally, you can run the curl commands as described in Test the Application .",
+    "title": "Accessing Data Reactively with Redis",
+    "source": "https://spring.io/guides/gs/spring-data-reactive-redis"
+  },
+  {
+    "heading": "Summary",
+    "content": "Congratulations! You have developed a Spring application that uses Spring Data and Redis for fully reactive, non-blocking database access!\nWant to write a new guide or contribute to an existing one? Check out our contribution guidelines .",
+    "title": "Accessing Data Reactively with Redis",
+    "source": "https://spring.io/guides/gs/spring-data-reactive-redis"
+  }
+]

@@ -1,2 +1,11 @@
 beautifulsoup4
 requests
+langchain_community
+langchain
+langchain_chroma
+langchain_huggingface
+unicodedata
+pathlib
+fpdf2
+
+#download ollama and then pull the nomic-embed-text model

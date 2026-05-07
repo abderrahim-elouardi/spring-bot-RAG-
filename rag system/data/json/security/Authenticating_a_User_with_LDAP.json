@@ -1,0 +1,80 @@
+[
+  {
+    "heading": "",
+    "content": "This guide walks you through the process of creating an application and securing it with the Spring Security LDAP module.",
+    "title": "Authenticating a User with LDAP",
+    "source": "https://spring.io/guides/gs/authenticating-ldap"
+  },
+  {
+    "heading": "What You Will Build",
+    "content": "You will build a simple web application that is secured by Spring Security’s embedded Java-based LDAP server. You will load the LDAP server with a data file that contains a set of users.",
+    "title": "Authenticating a User with LDAP",
+    "source": "https://spring.io/guides/gs/authenticating-ldap"
+  },
+  {
+    "heading": "What You Need",
+    "content": "About 15 minutes\nAbout 15 minutes\nA favorite text editor or IDE\nA favorite text editor or IDE\nJava 17 or later\nJava 17 or later\nGradle 7.5+ or Maven 3.5+\nGradle 7.5+ or Maven 3.5+\nYou can also import the code straight into your IDE: Spring Tool Suite (STS) IntelliJ IDEA VSCode\nYou can also import the code straight into your IDE:\nSpring Tool Suite (STS)\nSpring Tool Suite (STS)\nIntelliJ IDEA\nIntelliJ IDEA\nVSCode\nVSCode",
+    "title": "Authenticating a User with LDAP",
+    "source": "https://spring.io/guides/gs/authenticating-ldap"
+  },
+  {
+    "heading": "How to complete this guide",
+    "content": "Like most Spring Getting Started guides , you can start from scratch and complete each step or you can bypass basic setup steps that are already familiar to you. Either way, you end up with working code.\nTo start from scratch , move on to Starting with Spring Initializr .\nTo skip the basics , do the following:\nDownload and unzip the source repository for this guide, or clone it using Git: git clone https://github.com/spring-guides/gs-authenticating-ldap.git\nDownload and unzip the source repository for this guide, or clone it using Git: git clone https://github.com/spring-guides/gs-authenticating-ldap.git\ncd into gs-authenticating-ldap/initial\ncd into gs-authenticating-ldap/initial\nJump ahead to Create a Simple Web Controller .\nJump ahead to Create a Simple Web Controller .\nWhen you finish , you can check your results against the code in gs-authenticating-ldap/complete .",
+    "title": "Authenticating a User with LDAP",
+    "source": "https://spring.io/guides/gs/authenticating-ldap"
+  },
+  {
+    "heading": "Starting with Spring Initializr",
+    "content": "You can use this pre-initialized project and click Generate to download a ZIP file. This project is configured to fit the examples in this tutorial.\nTo manually initialize the project:\nNavigate to https://start.spring.io . This service pulls in all the dependencies you need for an application and does most of the setup for you.\nNavigate to https://start.spring.io . This service pulls in all the dependencies you need for an application and does most of the setup for you.\nChoose either Gradle or Maven and the language you want to use. This guide assumes that you chose Java.\nChoose either Gradle or Maven and the language you want to use. This guide assumes that you chose Java.\nClick Dependencies and select Spring Web .\nClick Dependencies and select Spring Web .\nClick Generate .\nClick Generate .\nDownload the resulting ZIP file, which is an archive of a web application that is configured with your choices.\nDownload the resulting ZIP file, which is an archive of a web application that is configured with your choices.",
+    "title": "Authenticating a User with LDAP",
+    "source": "https://spring.io/guides/gs/authenticating-ldap"
+  },
+  {
+    "heading": "Create a Simple Web Controller",
+    "content": "In Spring, REST endpoints are Spring MVC controllers. You can add the following Spring MVC controller, which handles a GET / request by returning a simple message:\npackage com.example.authenticatingldap;\n\nimport org.springframework.web.bind.annotation.GetMapping;\nimport org.springframework.web.bind.annotation.RestController;\n\n@RestController\npublic class HomeController {\n\n  @GetMapping(\"/\")\n  public String index() {\n    return \"Welcome to the home page!\";\n  }\n}\nThe entire class is marked up with @RestController so that Spring MVC can autodetect the controller (by using its built-in scanning features) and automatically configure the necessary web routes.\n@RestController also tells Spring MVC to write the text directly into the HTTP response body, because there are no views. Instead, when you visit the page, you get a simple message in the browser (because the focus of this guide is securing the page with LDAP).",
+    "title": "Authenticating a User with LDAP",
+    "source": "https://spring.io/guides/gs/authenticating-ldap"
+  },
+  {
+    "heading": "Build the Unsecured Web Application",
+    "content": "Before you secure the web application, you should verify that it works. To do that, you need to define some key beans, which you can do by creating an Application class. The following listing (from src/main/java/com/example/authenticatingldap/AuthenticatingLdapApplication.java ) shows that class:\npackage com.example.authenticatingldap;\n\nimport org.springframework.boot.SpringApplication;\nimport org.springframework.boot.autoconfigure.SpringBootApplication;\n\n@SpringBootApplication\npublic class AuthenticatingLdapApplication {\n\n  public static void main(String[] args) {\n    SpringApplication.run(AuthenticatingLdapApplication.class, args);\n  }\n\n}\n@SpringBootApplication is a convenience annotation that adds all of the following:\n@Configuration : Tags the class as a source of bean definitions for the application context.\n@Configuration : Tags the class as a source of bean definitions for the application context.\n@EnableAutoConfiguration : Tells Spring Boot to start adding beans based on classpath settings, other beans, and various property settings. For example, if spring-webmvc is on the classpath, this annotation flags the application as a web application and activates key behaviors, such as setting up a DispatcherServlet .\n@EnableAutoConfiguration : Tells Spring Boot to start adding beans based on classpath settings, other beans, and various property settings. For example, if spring-webmvc is on the classpath, this annotation flags the application as a web application and activates key behaviors, such as setting up a DispatcherServlet .\n@ComponentScan : Tells Spring to look for other components, configurations, and services in the com/example package, letting it find the controllers.\n@ComponentScan : Tells Spring to look for other components, configurations, and services in the com/example package, letting it find the controllers.\nThe main() method uses Spring Boot’s SpringApplication.run() method to launch an application. Did you notice that there was not a single line of XML? There is no web.xml file, either. This web application is 100% pure Java and you did not have to deal with configuring any plumbing or infrastructure.",
+    "title": "Authenticating a User with LDAP",
+    "source": "https://spring.io/guides/gs/authenticating-ldap"
+  },
+  {
+    "heading": "Build an executable JAR",
+    "content": "You can run the application from the command line with Gradle or Maven. You can also build a single executable JAR file that contains all the necessary dependencies, classes, and resources and run that. Building an executable jar makes it easy to ship, version, and deploy the service as an application throughout the development lifecycle, across different environments, and so forth.\nIf you use Gradle, you can run the application by using ./gradlew bootRun . Alternatively, you can build the JAR file by using ./gradlew build and then run the JAR file, as follows:\njava -jar build/libs/gs-authenticating-ldap-0.0.1-SNAPSHOT.jar\nIf you use Maven, you can run the application by using ./mvnw spring-boot:run . Alternatively, you can build the JAR file with ./mvnw clean package and then run the JAR file, as follows:\njava -jar target/gs-authenticating-ldap-0.0.1-SNAPSHOT.jar\nIf you open your browser and visit http://localhost:8080 , you should see the following plain text:\nWelcome to the home page!",
+    "title": "Authenticating a User with LDAP",
+    "source": "https://spring.io/guides/gs/authenticating-ldap"
+  },
+  {
+    "heading": "Set up Spring Security",
+    "content": "To configure Spring Security, you first need to add some extra dependencies to your build.\nFor a Gradle-based build, add the following dependencies to the build.gradle file:\nimplementation 'org.springframework.boot:spring-boot-starter-ldap'\nimplementation 'org.springframework.boot:spring-boot-starter-security'\nimplementation 'org.springframework.security:spring-security-ldap'\nimplementation 'com.unboundid:unboundid-ldapsdk'\nFor a Maven-based build, add the following dependencies to the pom.xml file:\n<dependency>\n\t<groupId>org.springframework.boot</groupId>\n\t<artifactId>spring-boot-starter-ldap</artifactId>\n</dependency>\n<dependency>\n\t<groupId>org.springframework.boot</groupId>\n\t<artifactId>spring-boot-starter-security</artifactId>\n</dependency>\n<dependency>\n\t<groupId>org.springframework.security</groupId>\n\t<artifactId>spring-security-ldap</artifactId>\n</dependency>\n<dependency>\n\t<groupId>com.unboundid</groupId>\n\t<artifactId>unboundid-ldapsdk</artifactId>\n</dependency>\nThese dependencies add Spring Security and UnboundId, an open source LDAP server. With those dependencies in place, you can then use pure Java to configure your security policy, as the following example (from src/main/java/com/example/authenticatingldap/WebSecurityConfig.java ) shows:\npackage com.example.authenticatingldap;\n\nimport org.springframework.context.annotation.Bean;\nimport org.springframework.context.annotation.Configuration;\nimport org.springframework.ldap.core.support.BaseLdapPathContextSource;\nimport org.springframework.security.authentication.AuthenticationManager;\nimport org.springframework.security.config.ldap.LdapPasswordComparisonAuthenticationManagerFactory;\nimport org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;\n\n@Configuration\npublic class WebSecurityConfig {\n\n  @Bean\n  public AuthenticationManager authenticationManager(\n      BaseLdapPathContextSource contextSource) {\n    LdapPasswordComparisonAuthenticationManagerFactory factory =\n        new LdapPasswordComparisonAuthenticationManagerFactory(\n            contextSource, new BCryptPasswordEncoder());\n    factory.setUserDnPatterns(\"uid={0},ou=people\");\n    return factory.createAuthenticationManager();\n  }\n\n}\nYou also need an LDAP server. Spring Boot provides auto-configuration for an embedded server written in pure Java, which is being used for this guide. The AuthenticationManager`bean uses `LdapPasswordComparisonAuthenticationManagerFactory to authenticate users by comparing passwords against entries found using the pattern uid={0},ou=people . Spring Boot’s auto-configured BaseLdapPathContextSource is injected automatically, pointed at the embedded server.",
+    "title": "Authenticating a User with LDAP",
+    "source": "https://spring.io/guides/gs/authenticating-ldap"
+  },
+  {
+    "heading": "Add Application Properties",
+    "content": "Spring LDAP requires three properties in application.properties . spring.ldap.base sets the base DN on the client-side LdapContextSource . spring.ldap.embedded.base-dn sets the base DN of the embedded server itself and references spring.ldap.base to avoid duplication. spring.ldap.embedded.port sets the port the embedded server listens on.\nspring.ldap.base=dc=springframework,dc=org\nspring.ldap.embedded.base-dn=${spring.ldap.base}\nspring.ldap.embedded.port=8389",
+    "title": "Authenticating a User with LDAP",
+    "source": "https://spring.io/guides/gs/authenticating-ldap"
+  },
+  {
+    "heading": "Set up User Data",
+    "content": "LDAP servers can use LDIF (LDAP Data Interchange Format) files to exchange user data. Spring Boot’s embedded LDAP server automatically loads src/main/resources/schema.ldif by default, making it easy to pre-load demonstration data without any explicit configuration. The following listing shows an LDIF file that works with this example:\ndn: dc=springframework,dc=org\nobjectclass: top\nobjectclass: domain\nobjectclass: extensibleObject\ndc: springframework\n\ndn: ou=groups,dc=springframework,dc=org\nobjectclass: top\nobjectclass: organizationalUnit\nou: groups\n\ndn: ou=people,dc=springframework,dc=org\nobjectclass: top\nobjectclass: organizationalUnit\nou: people\n\ndn: uid=ben,ou=people,dc=springframework,dc=org\nobjectclass: top\nobjectclass: person\nobjectclass: organizationalPerson\nobjectclass: inetOrgPerson\ncn: Ben Alex\nsn: Alex\nuid: ben\nuserPassword: $2a$10$c6bSeWPhg06xB1lvmaWNNe4NROmZiSpYhlocU/98HNr2MhIOiSt36\n\ndn: uid=bob,ou=people,dc=springframework,dc=org\nobjectclass: top\nobjectclass: person\nobjectclass: organizationalPerson\nobjectclass: inetOrgPerson\ncn: Bob Hamilton\nsn: Hamilton\nuid: bob\nuserPassword: $2a$10$X/Lsg42oQwUVvusQW6Rb7uNXD3uwCQZRX7qnnEfZHCak8T82HhY8G\n\ndn: cn=developers,ou=groups,dc=springframework,dc=org\nobjectclass: top\nobjectclass: groupOfUniqueNames\ncn: developers\nuniqueMember: uid=ben,ou=people,dc=springframework,dc=org\nuniqueMember: uid=bob,ou=people,dc=springframework,dc=org\nIf you visit the site at http://localhost:8080 , you should be redirected to a login page provided by Spring Security.\nEnter a user name of ben and a password of benspassword . You should see the following message in your browser:\nWelcome to the home page!",
+    "title": "Authenticating a User with LDAP",
+    "source": "https://spring.io/guides/gs/authenticating-ldap"
+  },
+  {
+    "heading": "Summary",
+    "content": "Congratulations! You have written a web application and secured it with Spring Security . In this case, you used an LDAP-based user store .",
+    "title": "Authenticating a User with LDAP",
+    "source": "https://spring.io/guides/gs/authenticating-ldap"
+  },
+  {
+    "heading": "See Also",
+    "content": "The following guide may also be helpful:\nBuilding an Application with Spring Boot\nBuilding an Application with Spring Boot\nWant to write a new guide or contribute to an existing one? Check out our contribution guidelines .",
+    "title": "Authenticating a User with LDAP",
+    "source": "https://spring.io/guides/gs/authenticating-ldap"
+  }
+]
