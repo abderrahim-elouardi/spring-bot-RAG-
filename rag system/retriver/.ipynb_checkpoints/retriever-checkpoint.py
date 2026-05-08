@@ -1,29 +1,16 @@
+from langchain_ollama import OllamaEmbeddings
 from langchain_chroma import Chroma
-from pathlib import Path
-import yaml
-from llm.OpenRouterEmbeddings import OpenRouterEmbeddings
-
-_ROOT = Path(__file__).parent.parent
 
 _COLLECTIONS = {
-    "data_access": ("spring_data_access", str(_ROOT / "vector_store" / "chroma_db" / "data_access")),
-    "security":    ("spring_security",    str(_ROOT / "vector_store" / "chroma_db" / "security")),
-    "docs":        ("docs",               str(_ROOT / "vector_store2")),
+    "data_access": ("spring_data_access", "../vector_store/chroma_db/data_access"),
+    "security":    ("spring_security",    "../vector_store/chroma_db/security"),
+    "docs":          ("docs","../vector_store2")
 }
 
-with open(_ROOT / "config" / "setting.yaml") as f:
-    key = yaml.safe_load(f)["llm"]["key"]
-    
-
-_embeddings = OpenRouterEmbeddings(
-    model="nvidia/llama-nemotron-embed-vl-1b-v2:free",
-    api_key=key
-)
-
-#_embeddings = OllamaEmbeddings(model="nomic-embed-text")
+_embeddings = OllamaEmbeddings(model="nomic-embed-text")
 
 
-def get_context(prompt: str, k: int = 3) -> str:
+def get_context(prompt: str, k: int = 5) -> str:
     """Search all ChromaDB collections and return the top-k chunks across all of them.
 
     Args:

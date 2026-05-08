@@ -1,0 +1,2 @@
+to run the backebnd : uvicorn api.api:app --reload --host 0.0.0.0 --port 8000 on the rag system/
+to run the frontend : npm run on rag system/front-end/springbot

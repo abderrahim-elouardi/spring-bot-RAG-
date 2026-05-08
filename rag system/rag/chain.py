@@ -7,7 +7,7 @@ from llm.llm import llm
 _parser = StrOutputParser()
 
 
-def ask(question: str, k: int = 5) -> str:
+def ask(question: str, k: int = 3) -> str:
     """Run the full RAG pipeline and return the LLM answer.
 
     Args:

@@ -1,18 +1,15 @@
-from langchain_ollama import ChatOllama
-from openai import AsyncOpenAI
-import yaml
+from langchain_openai import ChatOpenAI
+from pathlib import Path
 import yaml
 
-llm = ChatOllama(model="deepseek-r1", temperature=0)
+_ROOT = Path(__file__).parent.parent
 
-file_path = "..\\config\\setting.yaml"
-key_path = ["llm", "key"]
-with open(file_path, 'r', encoding='utf-8') as f:
-    data = yaml.safe_load(f)
-    # Navigation dynamique dans les clés
-    # Si key_path est ["vector_store", "path"]
-    key = data.get("llm", {}).get("key", "Clé introuvable")
-    client = AsyncOpenAI(
-        base_url="https://openrouter.ai/api/v1",
-        api_key=key,
-    )
+with open(_ROOT / "config" / "setting.yaml") as f:
+    key = yaml.safe_load(f)["llm"]["key"]
+
+llm = ChatOpenAI(
+    model="openai/gpt-oss-120b:free",
+    openai_api_base="https://openrouter.ai/api/v1",
+    openai_api_key=key,
+    temperature=0,
+)
