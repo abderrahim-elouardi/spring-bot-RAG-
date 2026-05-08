@@ -1,3 +1,3 @@
 .venv
 datapipeline/.ipynb_checkpoints/
-config/setting.yaml
+./config/setting.yaml
