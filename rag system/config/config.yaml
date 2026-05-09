@@ -1,0 +1,10 @@
+collection_name: my_collection_spring_bot
+embedding_model: all-MiniLM-L6-v2
+persistence_directory: vectore_store3
+retriever:
+  top_k: 5
+  search_kwargs:
+    distance_metric: cosine
+    fetch_k: 20
+openrouterGeneratingModelApi: https://openrouter.ai/api/v1
+openrouterGeneratingModelName: deepseek/deepseek-v4-flash 
