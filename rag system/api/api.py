@@ -2,7 +2,7 @@ from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
-from rag.chain import ask
+from rag.rag import rag
 # 
 
 app = FastAPI(title="Spring Bot RAG API")
@@ -17,7 +17,6 @@ app.add_middleware(
 
 class ChatRequest(BaseModel):
     question: str
-    k: int = 5
 
 
 class ChatResponse(BaseModel):
@@ -25,8 +24,8 @@ class ChatResponse(BaseModel):
 
 
 @app.post("/chat", response_model=ChatResponse)
-def chat(req: ChatRequest):
+async def chat(req: ChatRequest):
     if not req.question.strip():
         raise HTTPException(status_code=400, detail="Question must not be empty.")
-    answer = ask(req.question, k=req.k)
+    answer = await rag(question=req.question)
     return ChatResponse(answer=answer)

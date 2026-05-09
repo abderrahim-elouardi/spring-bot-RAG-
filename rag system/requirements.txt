@@ -10,3 +10,6 @@ langchain-openai
 chromadb
 fastapi
 uvicorn
+react-dom 
+react-native-web 
+html-entities

@@ -14,5 +14,5 @@ Tu dois repondre a la question de l'utilisateur en utilisant le contexte que je 
 def make_prompt(context , question):
     if isinstance(context, list):
         # On extrait .page_content de chaque objet Document dans la liste
-        context = "\n".join([doc.page_content for doc in context])
+        context = "\n".join(context)
     return prompt_template.format(context=context , question=question)

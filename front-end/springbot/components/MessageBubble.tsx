@@ -1,7 +1,9 @@
 import { Ionicons } from '@expo/vector-icons';
 import React, { useEffect, useRef } from 'react';
-import { Animated, StyleSheet, Text, View } from 'react-native';
+import { Animated, StyleSheet, View } from 'react-native';
 import { COLORS, FONTS } from '../constants/theme';
+import { decode } from 'html-entities';
+import Markdown from 'react-native-markdown-display';
 
 export type Message = {
   id: string;
@@ -15,12 +17,38 @@ export default function MessageBubble({ message }: { message: Message }) {
 
   useEffect(() => {
     Animated.parallel([
-      Animated.timing(opacity,    { toValue: 1, duration: 250, useNativeDriver: true }),
+      Animated.timing(opacity, { toValue: 1, duration: 250, useNativeDriver: true }),
       Animated.timing(translateY, { toValue: 0, duration: 250, useNativeDriver: true }),
     ]).start();
   }, []);
 
   const isUser = message.role === 'user';
+
+  // Configuration des styles spécifiques au Markdown
+  const markdownStyles = {
+    body: {
+      ...FONTS.body,
+      color: isUser ? '#D8F3DC' : COLORS.text,
+    },
+    // Pour que les @Entity et codes ne soient pas des gros blocs blancs
+    code_inline: {
+      backgroundColor: isUser ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.05)',
+      color: isUser ? '#FFFFFF' : COLORS.primary,
+      borderRadius: 4,
+      paddingHorizontal: 4,
+    },
+    // Pour les blocs de code (ex: interface Java)
+    fence: {
+      backgroundColor: '#1E1E1E',
+      borderRadius: 8,
+      padding: 10,
+      marginVertical: 5,
+    },
+    code_block: { color: '#D4D4D4' },
+    // Amélioration des listes
+    bullet_list: { marginVertical: 5 },
+    ordered_list: { marginVertical: 5 },
+  };
 
   return (
     <Animated.View style={[
@@ -35,9 +63,9 @@ export default function MessageBubble({ message }: { message: Message }) {
       )}
 
       <View style={[styles.bubble, isUser ? styles.bubbleUser : styles.bubbleBot]}>
-        <Text style={[styles.text, isUser ? styles.textUser : styles.textBot]}>
-          {message.text}
-        </Text>
+        <Markdown style={markdownStyles}>
+          {decode(message.text)}
+        </Markdown>
       </View>
     </Animated.View>
   );
@@ -67,7 +95,7 @@ const styles = StyleSheet.create({
   },
 
   bubble: {
-    maxWidth: '78%',
+    maxWidth: '82%', // Un peu plus large pour le code
     paddingHorizontal: 14,
     paddingVertical: 10,
     borderRadius: 18,
@@ -77,10 +105,6 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: COLORS.userBubbleBorder,
     borderBottomRightRadius: 4,
-    shadowColor: COLORS.primary,
-    shadowOpacity: 0.15,
-    shadowRadius: 8,
-    shadowOffset: { width: 0, height: 2 },
   },
   bubbleBot: {
     backgroundColor: COLORS.botBubble,
@@ -88,8 +112,4 @@ const styles = StyleSheet.create({
     borderColor: COLORS.botBubbleBorder,
     borderBottomLeftRadius: 4,
   },
-
-  text: { ...FONTS.body },
-  textUser: { color: '#D8F3DC' },
-  textBot:  { color: COLORS.text },
 });
