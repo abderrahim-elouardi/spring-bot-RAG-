@@ -29,8 +29,6 @@ Le backend est divisé en composants spécialisés pour le traitement du langage
 
 Le système suit un processus rigoureux pour garantir la précision technique :
 
-![Étapes du Pipeline RAG](assets/pipeline-rag.png)
-
 1.  **Indexation** : La documentation Spring est découpée et transformée en vecteurs via le modèle `all-MiniLM-L6-v2`.
 2.  **Retrieval (Récupération)** : Le système cherche les 5 segments les plus proches (Top-K: 5) en utilisant la **Similarité Cosinus**.
 3.  **Augmentation** : La question utilisateur est combinée aux segments récupérés dans un prompt structuré.
