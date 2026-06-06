@@ -8,7 +8,7 @@ Ce projet est une solution complète de **Retrieval-Augmented Generation (RAG)**
 
 Le projet est structuré de manière modulaire pour séparer l'interface utilisateur de la logique de traitement de données intensive.
 
-![Schéma de l'architecture globale du projet](./assets/Capture d'écran 2026-05-23 165216.png)
+![Schéma de l'architecture globale du projet](./assets/Capture%20d'écran%202026-05-23%20165216.png)
 
 ### 1. Organisation des Répertoires
 D'après l'arborescence du projet :
