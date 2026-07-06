@@ -1,4 +1,4 @@
-# 🍃 Science Media : Système RAG pour l'Écosystème Spring
+# 🍃Système RAG pour l'Écosystème Spring
 
 Ce projet est une solution complète de **Retrieval-Augmented Generation (RAG)**. Il combine une application mobile moderne en **React Native** et un moteur d'intelligence artificielle sous **FastAPI** conçu pour fournir une assistance technique experte sur le framework Spring.
 
